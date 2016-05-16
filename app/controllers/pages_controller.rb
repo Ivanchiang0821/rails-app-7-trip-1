@@ -73,8 +73,8 @@ class PagesController < ApplicationController
         # render json: @response_json
 
       # Search pixnet
-        pixnet_place_url = "https://emma.pixnet.cc/blog/articles/search?&per_page=15&format=json&"
-        query_string = "key=#{params[:search_string]}|自助|遊記|美食"
+        pixnet_place_url = "https://emma.pixnet.cc/blog/articles/search?&per_page=25&format=json&"
+        query_string = "key=#{params[:search_string]}&(自助|遊記|美食)"
         url = pixnet_place_url + query_string 
         encoded_url = URI.encode(url)
         uri = URI.parse(encoded_url)
@@ -88,13 +88,14 @@ class PagesController < ApplicationController
           tmp["photo_url"] =  a["link"]
           tmp["photo_width"] = "90"
           tmp["photo_height"] = "90" 
-          tmp["category"] = a["category"]
+          tmp["category"] = a["category"] + " (20#{a["public_at"][0..1]})"
           tmp["site_category"] = a["site_category"]
+          tmp["hits"] = a["hits"]["total"]
           @article_json << tmp
         end
 
-        #render json: @article_json
-        render json: @articles
+        render json: @article_json
+        #render json: @articles
   end
 
 

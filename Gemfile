@@ -21,6 +21,15 @@ gem 'pg'
 gem 'omniauth-facebook' # Facebook authentication
 gem "koala", "~> 1.10.0rc" # Facebook API
 
+# To crawl/scrap
+gem 'nokogiri'
+
+# To use GeoCoder, https://github.com/alexreisner/geocoder
+gem 'geocoder'
+
+# For security key
+gem "figaro"
+
 group :development do
   gem 'pry'  
 end

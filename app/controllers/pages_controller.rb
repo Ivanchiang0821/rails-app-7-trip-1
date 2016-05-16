@@ -29,12 +29,12 @@ class PagesController < ApplicationController
       # Search pixnet
       # https://emma.pixnet.cc/blog/articles/search?key=沖繩&per_page=10&format=json      
         pixnet_place_url = "https://emma.pixnet.cc/blog/articles/search?&per_page=25&format=json&"
-        query_string = "key=#{params[:search_string]}|自助|遊記|美食"
+        query_string = "key=#{params[:search_string]}&(自助|遊記|美食)"
         url = pixnet_place_url + query_string 
         encoded_url = URI.encode(url)
         uri = URI.parse(encoded_url)
         @articles = JSON.parse(Net::HTTP.get(uri))["articles"]
-
+        @articles = @articles.sort_by {|a| -a["hits"]["total"]}
     end    
     
   end
@@ -79,6 +79,7 @@ class PagesController < ApplicationController
         encoded_url = URI.encode(url)
         uri = URI.parse(encoded_url)
         @articles = JSON.parse(Net::HTTP.get(uri))["articles"]
+        @articles = @articles.sort_by {|a| -a["hits"]["total"]}
         @article_json = Array.new
 
         @articles.each_with_index do |a, i|
@@ -92,7 +93,8 @@ class PagesController < ApplicationController
           @article_json << tmp
         end
 
-        render json: @article_json
+        #render json: @article_json
+        render json: @articles
   end
 
 

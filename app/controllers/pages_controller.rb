@@ -88,14 +88,14 @@ class PagesController < ApplicationController
           tmp["photo_url"] =  a["link"]
           tmp["photo_width"] = "90"
           tmp["photo_height"] = "90" 
-          tmp["category"] = a["category"] + " (20#{a["public_at"][0..1]})"
+          tmp["category"] = a["category"]
           tmp["site_category"] = a["site_category"]
           tmp["hits"] = a["hits"]["total"]
           @article_json << tmp
         end
 
-        render json: @article_json
-        #render json: @articles
+        #render json: @article_json
+        render json: @articles
   end
 
 

@@ -25,22 +25,25 @@
                                                                      :target => "_blank" %> )</h3>
     </div> 
     <% for article in @articles %> 
-      <% photo_url = article["thumb"] %>      
-      <div class="media" style="margin-top: 30px;">
-        <div class="media-left" style="padding-right: 80px;">
-          <%= link_to article["link"], target: "_blank" do %>
-            <div style="width: 90px; height: 90px;">
-              <%= image_tag(photo_url, class: 'media-object', style:"width: 100%; height: 100%; object-fit: contain;") %>                
-            </div>
+      <% if !["職場甘苦","政論人文","醫療保健","結婚紀錄","親子育兒","生活綜合"].any? {|string| article["site_category"].include?(string)} and 
+            article["thumb"] != "https://s.pixfs.net/mobile/images/blog/article-image.png" %>
+        <% photo_url = article["thumb"] %>      
+        <div class="media" style="margin-top: 30px;">
+          <div class="media-left" style="padding-right: 80px;">
+            <%= link_to article["link"], target: "_blank" do %>
+              <div style="width: 90px; height: 90px;">
+                <%= image_tag(photo_url, class: 'media-object', style:"width: 100%; height: 100%; object-fit: contain;") %>                
+              </div>
 
-          <% end %>
-        </div>
-        <div class="media-body" style="vertical-align: middle;">
-          <h4 class="media-heading"><%= link_to article["title"], article["link"], target: "_blank" %>
-          <h5>景點分類: <%= article["category"] %></h5>
-          <h5>全站分類: <%= article["site_category"] %></h5>
-        </div>
-      </div>                
+            <% end %>
+          </div>
+          <div class="media-body" style="vertical-align: middle;">
+            <h4 class="media-heading"><%= link_to article["title"], article["link"], target: "_blank" %>
+            <h5>景點分類: <%= article["category"] %></h5>
+            <h5>全站分類: <%= article["site_category"] %></h5>
+          </div>
+        </div>          
+      <% end %>              
     <% end %>
   </div>   
 <% end %>

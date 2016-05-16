@@ -83,15 +83,18 @@ class PagesController < ApplicationController
         @article_json = Array.new
 
         @articles.each_with_index do |a, i|
-          tmp = Hash.new
-          tmp["title"] = a["title"]
-          tmp["photo_url"] =  a["link"]
-          tmp["photo_width"] = "90"
-          tmp["photo_height"] = "90" 
-          tmp["category"] = a["category"]
-          tmp["site_category"] = a["site_category"]
-          tmp["hits"] = a["hits"]["total"]
-          @article_json << tmp
+          if !["職場甘苦","政論人文","醫療保健","結婚紀錄","親子育兒","生活綜合"].any? {|string| a["site_category"].include?(string)} and 
+            a["thumb"] != "https://s.pixfs.net/mobile/images/blog/article-image.png"
+            tmp = Hash.new
+            tmp["title"] = a["title"]
+            tmp["photo_url"] =  a["thumb"]
+            tmp["photo_width"] = "90"
+            tmp["photo_height"] = "90" 
+            tmp["category"] = a["category"]
+            tmp["site_category"] = a["site_category"]
+            tmp["hits"] = a["hits"]["total"]
+            @article_json << tmp
+          end
         end
 
         render json: @article_json

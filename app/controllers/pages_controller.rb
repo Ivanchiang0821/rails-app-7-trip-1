@@ -94,8 +94,8 @@ class PagesController < ApplicationController
           @article_json << tmp
         end
 
-        #render json: @article_json
-        render json: @articles
+        render json: @article_json
+        #render json: @articles
   end
 
 

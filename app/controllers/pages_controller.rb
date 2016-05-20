@@ -45,7 +45,7 @@ class PagesController < ApplicationController
     @response = JSON.parse(Net::HTTP.get(uri))["results"]
 
     SearchCount.first.update(cnt2: SearchCount.first.cnt2+1)  
-
+binding.pry
   end
 
   def near_by_detail

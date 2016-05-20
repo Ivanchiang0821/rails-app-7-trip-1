@@ -111,39 +111,41 @@
     <iframe src = <%= @place["url"] + "&output=embed" %> frameborder='0' style='border:0' width='600' height='300' allowfullscreen></iframe>
     <br><br><br>
 
-    <h4 style="padding-bottom: 10px;">
-      <%= link_to @place["user_ratings_total"].to_s + " 則 Google 評論", @place["url"], target: "_blank" %> 
-    </h4>
-    <table class="table table-hover table-condensed table-borderless">
-      <thead>
-        <tr>
-          <th width="8%"></th>
-          <th width="15%"></th>
-          <th width="77%"></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @place["reviews"].each do |r| %>
+    <% if @place["reviews"] %>
+      <h4 style="padding-bottom: 10px;">
+        <%= link_to @place["user_ratings_total"].to_s + " 則 Google 評論", @place["url"], target: "_blank" %> 
+      </h4>
+      <table class="table table-hover table-condensed table-borderless">
+        <thead>
           <tr>
-            <td>
-              <% if r["profile_photo_url"] %>
-                <%= image_tag r["profile_photo_url"], height: '40', width: '40', style: "border-radius: 20px;" %>
-              <% else %>
-                <%= image_tag "unknow.jpg", height: '40', width: '40', style: "border-radius: 20px;" %>
-              <% end %>            
-            </td>
-            <td>
-              <% r["rating"].times do %>
-                <span class="glyphicon glyphicon-star" style="top: 3px"></span>
-              <% end %>
-              <% (5-r["rating"]).times do %>
-                <span class="glyphicon glyphicon-star-empty" style="top: 3px"></span>
-              <% end %>            
-            </td>
-            <td style="padding-top: 8px;"><%= r["text"] %></td>
+            <th width="8%"></th>
+            <th width="15%"></th>
+            <th width="77%"></th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% @place["reviews"].each do |r| %>
+            <tr>
+              <td>
+                <% if r["profile_photo_url"] %>
+                  <%= image_tag r["profile_photo_url"], height: '40', width: '40', style: "border-radius: 20px;" %>
+                <% else %>
+                  <%= image_tag "unknow.jpg", height: '40', width: '40', style: "border-radius: 20px;" %>
+                <% end %>            
+              </td>
+              <td>
+                <% r["rating"].times do %>
+                  <span class="glyphicon glyphicon-star" style="top: 3px"></span>
+                <% end %>
+                <% (5-r["rating"]).times do %>
+                  <span class="glyphicon glyphicon-star-empty" style="top: 3px"></span>
+                <% end %>            
+              </td>
+              <td style="padding-top: 8px;"><%= r["text"] %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
   </div>
 </div>  

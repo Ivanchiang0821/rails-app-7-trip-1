@@ -4,7 +4,7 @@
     <div class="navbar-header">
       <%= link_to "幫旅(遊)", root_path, class: "navbar-brand", style: "font-size: 1.8em; font-weight: bold; padding-top: 30px; padding-left: 40px;" %>
     </div>
-    <div class="pull-right">
+    <div class="pull-right" style="padding-right: 100px;">
       <b>地點搜尋:</b> <%= SearchCount.first.cnt0 %>,&nbsp&nbsp
       <b>地點詳情搜尋:</b> <%= SearchCount.first.cnt1 %>,&nbsp&nbsp
       <b>附近地點搜尋:</b> <%= SearchCount.first.cnt2 %>,&nbsp&nbsp
@@ -12,7 +12,7 @@
       <b>JSON關鍵字搜尋地點:</b> <%= SearchCount.first.cnt4 %>,&nbsp&nbsp
       <b>JSON ID搜尋地點:</b> <%= SearchCount.first.cnt5 %>,&nbsp&nbsp
       <b>JSON ID搜尋:</b> <%= SearchCount.first.cnt6 %>,&nbsp&nbsp
-      <b>JSON地點詳情:</b> <%= SearchCount.first.cnt7 %>&nbsp&nbsp&nbsp&nbsp
+      <b>JSON地點詳情:</b> <%= SearchCount.first.cnt7 %>
     </div>
   </div>
 </nav>

@@ -17,6 +17,11 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 
+body {
+  min-width: 1300px;
+}
+
+
 .jumbotron {
   padding-top: 30px;
   padding-bottom: 30px;  

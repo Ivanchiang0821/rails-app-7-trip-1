@@ -17,13 +17,14 @@ class PagesController < ApplicationController
                                 search_option: params[:search_option] ? params[:search_option] : "", 
                                 redirect: false)
       end
-
-    end    
+      SearchCount.first.update(cnt0: SearchCount.first.cnt0+1)  
+    end  
     
   end
 
   def detail
     @place = get_place_detail(params[:place_id])
+    SearchCount.first.update(cnt1: SearchCount.first.cnt1+1)
   end
 
   def near_by
@@ -41,10 +42,13 @@ class PagesController < ApplicationController
     uri = URI.parse(encoded_url)
     @response = JSON.parse(Net::HTTP.get(uri))["results"]
 
+    SearchCount.first.update(cnt2: SearchCount.first.cnt2+1)  
+
   end
 
   def near_by_detail
     @place = get_place_detail(params[:place_id])
+    SearchCount.first.update(cnt3: SearchCount.first.cnt3+1)  
   end
 
   def search_by_keyword_json
@@ -73,7 +77,7 @@ class PagesController < ApplicationController
       tmp["types"] = r["types"]
       @response_json["results"] << tmp
     end
-
+    SearchCount.first.update(cnt4: SearchCount.first.cnt4+1)  
     render json: @response_json
   end
 
@@ -102,7 +106,7 @@ class PagesController < ApplicationController
       tmp["types"] = r["types"]
       @response_json["results"] << tmp
     end
-
+    SearchCount.first.update(cnt5: SearchCount.first.cnt5+1)  
     render json: @response_json        
   end
 
@@ -113,6 +117,7 @@ class PagesController < ApplicationController
     @place = auto_complete_by_keyword(params[:search_string])    
     @place_json = Hash.new
     @place_json["place_id"] = @place["place_id"]
+    SearchCount.first.update(cnt6: SearchCount.first.cnt6+1)  
     render json: @place_json    
   end
 
@@ -154,7 +159,7 @@ class PagesController < ApplicationController
       tmp["text"] = r["text"]      
       @place_json["reviews"] << tmp
     end
-
+    SearchCount.first.update(cnt7: SearchCount.first.cnt7+1)  
     render json: @place_json    
   end
 

@@ -92,15 +92,23 @@
     <div>
       <!-- Nav tabs -->
       <ul class="nav nav-tabs">
-        <li class="active"> <%= link_to "關鍵字搜尋地點",    "#tab1", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
-        <li>                <%= link_to "PID搜尋地點", "#tab2", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li> 
-        <li>                <%= link_to "搜尋PID", "#tab3", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
-        <li>                <%= link_to "搜尋地點詳情",  "#tab4", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
+        <li class="active"> <%= link_to "修改紀錄",         "#tab1", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
+        <li>                <%= link_to "關鍵字搜尋地點",    "#tab2", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
+        <li>                <%= link_to "PID搜尋地點",      "#tab3", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li> 
+        <li>                <%= link_to "搜尋PID",         "#tab4", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
+        <li>                <%= link_to "搜尋地點詳情",     "#tab5", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
       </ul>
     
       <!-- Tab panes -->
       <div class="tab-content">
         <div class="tab-pane active" id="tab1">
+          <br><br>
+          <div class="well">
+            <h4>v1.0:  Initial Release</h4>
+            <h4>v1.1:  Nearby Search新增Distnace/Duration欄位 (使用Google MAP Distance Matrix API)</h4>
+          </div>          
+        </div>         
+        <div class="tab-pane" id="tab2">
           <br><br>
           <div class="well">
             <h4>搜尋 "台北市" "景點" </h4>
@@ -122,7 +130,7 @@
             </h5>                            
           </div>          
         </div>        
-        <div class="tab-pane" id="tab2">
+        <div class="tab-pane" id="tab3">
           <br><br>
           <div class="well">
             <h4>搜尋 "中正紀念堂" "附近景點" ( Place ID從『搜尋PID』得到 )</h4>
@@ -144,7 +152,7 @@
             </h5>                            
           </div>           
         </div>           
-        <div class="tab-pane" id="tab3">
+        <div class="tab-pane" id="tab4">
           <br><br>
           <div class="well">
             <h4>搜尋 "台北市" Place ID </h4>
@@ -152,7 +160,7 @@
                     get_place_id_path(search_string: "台北市"), :target => "_blank" %></h5>                        
           </div>          
         </div>
-        <div class="tab-pane" id="tab4">
+        <div class="tab-pane" id="tab5">
           <br><br>
           <div class="well">
             <h4>搜尋 "通堂拉麵" 地點詳情 ( Place ID從『搜尋PID』得到 ) </h4>

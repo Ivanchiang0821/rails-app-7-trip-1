@@ -103,7 +103,7 @@
       <!-- Nav tabs -->
       <ul class="nav nav-tabs">
         <li class="active"> <%= link_to "關鍵字搜尋",    "#tab1", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
-        <li>                <%= link_to "得到Place ID", "#tab2", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
+        <li>                <%= link_to "搜尋Place ID", "#tab2", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
         <li>                <%= link_to "得到地點詳情",  "#tab3", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
         <li>                <%= link_to "Place ID搜尋", "#tab4", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>                              
       </ul>
@@ -135,7 +135,7 @@
         <div class="tab-pane" id="tab2">
           <br><br>
           <div class="well">
-            <h4>得到 "台北市" Place ID </h4>
+            <h4>搜尋 "台北市" Place ID </h4>
             <h5><%= link_to get_place_id_url+"?search_string=台北市", 
                     get_place_id_path(search_string: "台北市"), :target => "_blank" %></h5>                        
           </div>          

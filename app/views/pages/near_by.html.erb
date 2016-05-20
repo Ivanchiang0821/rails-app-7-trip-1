@@ -112,6 +112,13 @@
       icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
     });
 
+    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+      return function() {
+        infowindow.setContent("<h5><b>搜尋點" + "</b></h5>");
+        infowindow.open(map, marker);
+      }
+    })(marker, i));    
+
   <% end %>      
 </script>
 

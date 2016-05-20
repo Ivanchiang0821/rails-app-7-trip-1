@@ -55,21 +55,23 @@
 
     <br>
 
-    <div class="row" style="padding-left: 20px;">
-        <% photo_url_prefix = "https://maps.googleapis.com/maps/api/place/photo?maxheight=400&key=#{ENV["google_api_key"]}&photoreference=" %> 
-      <% if @place["photos"][0] %>
-        <%= image_tag photo_url_prefix + @place["photos"][0]["photo_reference"], style:"height: 130px; max-width: 200px;" %>
-      <% end %>
-      <% if @place["photos"][1] %>
-        <%= image_tag photo_url_prefix + @place["photos"][1]["photo_reference"], style:"height: 130px; max-width: 200px;" %>
-      <% end %>
-      <% if @place["photos"][2] %>
-        <%= image_tag photo_url_prefix + @place["photos"][2]["photo_reference"], style:"height: 130px; max-width: 200px;" %>
-      <% end %>  
-      <% if @place["photos"][3] %>
-        <%= image_tag photo_url_prefix + @place["photos"][3]["photo_reference"], style:"height: 130px; max-width: 200px;" %>
-      <% end %>                  
-    </div>
+    <% if @place["photos"] %>
+      <div class="row" style="padding-left: 20px;">
+          <% photo_url_prefix = "https://maps.googleapis.com/maps/api/place/photo?maxheight=400&key=#{ENV["google_api_key"]}&photoreference=" %> 
+        <% if @place["photos"][0] %>
+          <%= image_tag photo_url_prefix + @place["photos"][0]["photo_reference"], style:"height: 130px; max-width: 200px;" %>
+        <% end %>
+        <% if @place["photos"][1] %>
+          <%= image_tag photo_url_prefix + @place["photos"][1]["photo_reference"], style:"height: 130px; max-width: 200px;" %>
+        <% end %>
+        <% if @place["photos"][2] %>
+          <%= image_tag photo_url_prefix + @place["photos"][2]["photo_reference"], style:"height: 130px; max-width: 200px;" %>
+        <% end %>  
+        <% if @place["photos"][3] %>
+          <%= image_tag photo_url_prefix + @place["photos"][3]["photo_reference"], style:"height: 130px; max-width: 200px;" %>
+        <% end %>                  
+      </div>
+    <% end %>
 
     <br>
 

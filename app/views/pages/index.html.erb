@@ -1,5 +1,5 @@
 <div class="jumbotron">
-  <div class="container">
+  <div class="index-container">
     <h2 style="margin-top: 0">搜尋地點</h2>
     <div class="row">
       <div class="col-xs-9">
@@ -24,18 +24,16 @@
 </div>
 
 <% if params[:search_string] %>
-  <div class="container">
+  <div class="index-container">
     <div class="well">
       <h3 style="margin: 0"><%= @place["description"] %>
         搜尋<%= params[:search_option] %>結果....
       </h3>
     </div> 
-    <div>
+
+    <div class="container">
       <!-- Nav tabs -->
       <ul class="nav nav-tabs">
-        <li>
-          <a href="#map" data-toggle="tab"><h4>地理位置</h4></a>
-        </li>
         <li class="active">
           <a href="#attraction" data-toggle="tab"><h4>景點</h4></a>
         </li>
@@ -43,15 +41,6 @@
     
       <!-- Tab panes -->
       <div class="tab-content">
-        <div class="tab-pane" id="map">
-          <div id="index-h4">
-            <br>
-            <h4><b>地點：</b><%= @place["description"] %></h4> 
-            <h4><b>座標：</b>[<%= @coordinate["lat"] %>, <%= @coordinate["lng"] %>]</h4> 
-            <h4><b>Place ID：</b><%= @place["place_id"] %></h4>          
-            <h4><b>Types：</b><%= @place["types"] %></h4>                                  
-          </div>
-        </div>
         <div  class="tab-pane active" id="attraction">
           <% for location in @response %> 
             <% if location["photos"] %>
@@ -96,7 +85,8 @@
     <br><br><br><br>
   </div>   
 <% else %>
-  <div class="container">
+  <div class="index-container">
+    <br>
     <h1>JSON範例</h1>
     <br> 
     <div>

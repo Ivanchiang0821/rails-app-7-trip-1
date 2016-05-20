@@ -1,17 +1,16 @@
 <div class="jumbotron">
-  <div class="container">
+  <div class="index-container">
     <h2 style="margin-top: 0">
       返回景點 <%= link_to params[:search_string], detail_path(place_id: params[:place_id], 
                                                              search_string: params[:ori_string],
                                                              search_option: params[:ori_option],
                                                              redirect: params["redirect"]) %>  
-
     </h2>
   </div>
 </div>
 
 <% if params[:search_string] %>
-  <div class="container">
+  <div class="index-container">
     <div class="well">
       <h3 style="margin: 0"><%= params[:search_string] %>
         附近<%= params[:search_option] %>搜尋結果....

@@ -54,7 +54,8 @@ class PagesController < ApplicationController
     @place = auto_complete_by_keyword(params[:search_string])
     @coordinate = get_geocode_by_place_id(@place["place_id"])
     @response = nearby_search_by_coordinate(@coordinate["lat"], @coordinate["lng"], params[:search_option])
-    @response_json = Array.new
+    @response_json = Hash.new
+    @response_json["results"] = Array.new
 
     @response.each_with_index do |r, i|
       tmp = Hash.new
@@ -70,7 +71,7 @@ class PagesController < ApplicationController
       tmp["place_id"] = r["place_id"]
       tmp["rating"] = r["rating"]
       tmp["types"] = r["types"]
-      @response_json << tmp
+      @response_json["results"] << tmp
     end
 
     render json: @response_json
@@ -82,7 +83,8 @@ class PagesController < ApplicationController
 
     @coordinate = get_geocode_by_place_id(params["place_id"])
     @response = nearby_search_by_coordinate(@coordinate["lat"], @coordinate["lng"], params[:search_option])
-    @response_json = Array.new
+    @response_json = Hash.new
+    @response_json["results"] = Array.new
 
     @response.each_with_index do |r, i|
       tmp = Hash.new
@@ -98,7 +100,7 @@ class PagesController < ApplicationController
       tmp["place_id"] = r["place_id"]
       tmp["rating"] = r["rating"]
       tmp["types"] = r["types"]
-      @response_json << tmp
+      @response_json["results"] << tmp
     end
 
     render json: @response_json        

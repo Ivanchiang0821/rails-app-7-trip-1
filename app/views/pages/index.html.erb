@@ -143,7 +143,7 @@
         <div class="tab-pane" id="tab3">
           <br><br>
           <div class="well">
-            <h4>搜尋 "通堂拉麵" Place ID ( 從Place ID搜尋得到 ) </h4>
+            <h4>得到 "通堂拉麵" 地點詳情 ( ID從Place ID搜尋得到 ) </h4>
             <h5><%= link_to get_detail_url+"?place_id=ChIJGaKzQLFp5TQRTpMN05kfffQ", 
                     get_detail_path(place_id: "ChIJGaKzQLFp5TQRTpMN05kfffQ"), :target => "_blank" %></h5>                        
           </div>      
@@ -151,19 +151,19 @@
         <div class="tab-pane" id="tab4">
           <br><br>
           <div class="well">
-            <h4>搜尋 "中正紀念堂" "附近景點" ( 從Place ID搜尋得到 )</h4>
+            <h4>搜尋 "中正紀念堂" "附近景點" ( ID從Place ID搜尋得到 )</h4>
             <h5>
               <%= link_to search_by_place_id_url+"?place_id=ChIJTamiuZ2pQjQRsmnfkkID6UM&search_option=景點", 
                           search_by_place_id_path(search_option: "景點", place_id: "ChIJTamiuZ2pQjQRsmnfkkID6UM"), :target => "_blank" %>
             </h5>
             <br>
-            <h4>搜尋 "中正紀念堂" "附近餐廳" ( 從Place ID搜尋得到 )</h4>
+            <h4>搜尋 "中正紀念堂" "附近餐廳" ( ID從Place ID搜尋得到 )</h4>
             <h5>
               <%= link_to search_by_place_id_url+"?place_id=ChIJTamiuZ2pQjQRsmnfkkID6UM&search_option=餐廳", 
                           search_by_place_id_path(search_option: "餐廳", place_id: "ChIJTamiuZ2pQjQRsmnfkkID6UM"), :target => "_blank" %>
             </h5>
             <br>
-            <h4>搜尋 "中正紀念堂" "附近購物" ( 從Place ID搜尋得到 )</h4>
+            <h4>搜尋 "中正紀念堂" "附近購物" ( ID從Place ID搜尋得到 )</h4>
             <h5>
               <%= link_to search_by_place_id_url+"?place_id=ChIJTamiuZ2pQjQRsmnfkkID6UM&search_option=購物", 
                           search_by_place_id_path(search_option: "購物", place_id: "ChIJTamiuZ2pQjQRsmnfkkID6UM"), :target => "_blank" %>

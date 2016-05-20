@@ -65,7 +65,8 @@ class PagesController < ApplicationController
       tmp["lat"] = r["geometry"]["location"]["lat"]
       tmp["lng"] = r["geometry"]["location"]["lng"]
       if r["photos"]
-        tmp["photo_url"] =  "https://maps.googleapis.com/maps/api/place/photo?maxwidth=#{r["photos"][0]["width"]}&photoreference=" + r["photos"][0]["photo_reference"] + "&key=#{ENV["google_api_key"]}"
+        tmp["photo_url_pre"] = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=#{r["photos"][0]["width"]}&photoreference="
+        tmp["photo_ref"] =  r["photos"][0]["photo_reference"] + "&key=#{ENV["google_api_key"]}"
         tmp["photo_width"] = r["photos"][0]["width"]
         tmp["photo_height"] = r["photos"][0]["height"]       
       end
@@ -99,7 +100,8 @@ class PagesController < ApplicationController
       tmp["lat"] = r["geometry"]["location"]["lat"]
       tmp["lng"] = r["geometry"]["location"]["lng"]
       if r["photos"]
-        tmp["photo_url"] =  "https://maps.googleapis.com/maps/api/place/photo?maxwidth=#{r["photos"][0]["width"]}&photoreference=" + r["photos"][0]["photo_reference"] + "&key=#{ENV["google_api_key"]}"
+        tmp["photo_url_pre"] = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=#{r["photos"][0]["width"]}&photoreference="
+        tmp["photo_ref"] =  r["photos"][0]["photo_reference"] + "&key=#{ENV["google_api_key"]}"
         tmp["photo_width"] = r["photos"][0]["width"]
         tmp["photo_height"] = r["photos"][0]["height"]       
       end

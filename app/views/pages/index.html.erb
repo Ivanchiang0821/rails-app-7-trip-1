@@ -27,9 +27,11 @@
   <div class="index-container">
     <div class="well">
       <h3 style="margin: 0"><%= @place["description"] %>
-        搜尋<%= params[:search_option] %>結果....
+        搜尋<%= params[:search_option] %>結果.... ( <%= link_to "隱藏地圖", "#", :id => "click", :onclick => "toggle_visibility('map', 'click');" %> )
       </h3>
     </div> 
+    
+    <div id="map" style="width: 800px; height: 400px; display: block"></div><br>  
 
     <div class="container">
       <!-- Nav tabs -->
@@ -42,7 +44,7 @@
       <!-- Tab panes -->
       <div class="tab-content">
         <div  class="tab-pane active" id="attraction">
-          <% for location in @response %> 
+          <% @response.each do |location| %> 
             <% if location["photos"] %>
               <% photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
                              location["photos"][0]["photo_reference"] + 
@@ -180,4 +182,59 @@
   }
 
   google.maps.event.addDomListener(window, 'load', initialize);
+</script>
+
+<script type="text/javascript">
+  <% if @response  %>
+    <% location_array = @response.map {|r| [r["name"], r["geometry"]["location"]["lat"], r["geometry"]["location"]["lng"], r["rating"] ? r["rating"].to_s : "N/A"]} %>
+  
+    var locations = <%= raw location_array %>;
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 14,
+      center: new google.maps.LatLng(<%= @coordinate["lat"] %>, <%= @coordinate["lng"] %>),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {  
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map,
+        icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent("<h5><b>"+locations[i][0]+"</b></h5>"+"景點評分: "+locations[i][3]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng(<%= @coordinate["lat"] %>, <%= @coordinate["lng"] %>),
+      map: map,
+      icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+    });
+  <% end %>      
+</script>
+
+<script>
+  function toggle_visibility(id1, id2) {
+     var e1 = document.getElementById(id1);
+     if(e1.style.display == 'block')
+        e1.style.display = 'none';
+     else
+        e1.style.display = 'block';
+
+     var e2= document.getElementById(id2);
+     if(e2.text == '顯示地圖')
+        e2.text = '隱藏地圖';
+     else
+        e2.text = '顯示地圖';      
+  }
 </script>

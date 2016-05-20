@@ -9,65 +9,124 @@
   </div>
 </div>
 
-<% if params[:search_string] %>
-  <div class="index-container">
-    <div class="well">
-      <h3 style="margin: 0"><%= params[:search_string] %>
-        附近<%= params[:search_option] %>搜尋結果....
-      </h3>
-    </div> 
-    <div>
-      <!-- Nav tabs -->
-      <ul class="nav nav-tabs">
-        <li class="active">
-          <a href="#attraction" data-toggle="tab"><h4>附近<%= params[:search_option] %></h4></a>
-        </li>
-      </ul>
-    
-      <!-- Tab panes -->
-      <div class="tab-content">
-        <div  class="tab-pane active" id="attraction">
-          <% @response.each_with_index do |location, i| %> 
-            <% if location["photos"] %>
-              <% photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                             location["photos"][0]["photo_reference"] + 
-                             "&key=#{ENV["google_api_key"]}" %>      
-              <div class="media">
-                <div class="media-left" style="padding-right: 80px;">
-                  <%= link_to "#" do %>
-                    <div style="width: 200px; height: 200px;">
-                      <%= image_tag(photo_url, class: 'media-object', style:"width: 100%; height: 100%; object-fit: contain;") %>                
-                    </div>
 
-                  <% end %>
-                </div>
-                <div class="media-body" style="vertical-align: middle;">
-                  <h3 class="media-heading">
-                    <%= link_to location["name"], near_by_detail_path(place_id: location["place_id"], 
-                                                              search_string: params[:search_string] ? params[:search_string] : "",
-                                                              search_option: params[:search_option] ? params[:search_option] : "",
-                                                              redirect: true) %>
-                  </h3>
-                  <% if location["rating"] %>
-                    <h4>
-                      <b>景點評分：</b><span style="color: #e7711b;"><%= location["rating"] %>&nbsp</span>
-                      <% location["rating"].floor.times do %>
-                        <span class="glyphicon glyphicon-star" style="top: 3px; color: #e7711b;"></span>
-                      <% end %>
-                      <% (5-location["rating"].floor).times do %>
-                        <span class="glyphicon glyphicon-star-empty" style="top: 3px; color: #e7711b;"></span>
-                      <% end %>
-                    </h4>
-                  <% end %>
-                  <h4><b>景點分類：</b><%= location["types"] %></h4>
-                  <h4><b>景點距離：</b><%= @distance[i]["distance"]["text"] %>, 步行 <%= @distance[i]["duration"]["text"] %>鐘</h4>
-                </div>
-              </div>           
-             <% end %>           
-          <% end %>          
-        </div>
+<div class="index-container">
+  <div class="well">
+    <h3 style="margin: 0"><%= params[:search_string] %>
+      附近<%= params[:search_option] %>搜尋結果.... ( <%= link_to "隱藏地圖", "#", :id => "click", :onclick => "toggle_visibility('map', 'click');" %> )
+    </h3>
+  </div> 
+
+  <div id="map" style="width: 800px; height: 400px; display: block"></div><br>  
+
+  <div class="container">
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs">
+      <li class="active">
+        <a href="#attraction" data-toggle="tab"><h4>附近<%= params[:search_option] %></h4></a>
+      </li>
+    </ul>
+  
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div  class="tab-pane active" id="attraction">
+        <% @response.each_with_index do |location, i| %> 
+          <% if location["photos"] %>
+            <% photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
+                           location["photos"][0]["photo_reference"] + 
+                           "&key=#{ENV["google_api_key"]}" %>      
+            <div class="media">
+              <div class="media-left" style="padding-right: 80px;">
+                <%= link_to "#" do %>
+                  <div style="width: 200px; height: 200px;">
+                    <%= image_tag(photo_url, class: 'media-object', style:"width: 100%; height: 100%; object-fit: contain;") %>                
+                  </div>
+
+                <% end %>
+              </div>
+              <div class="media-body" style="vertical-align: middle;">
+                <h3 class="media-heading">
+                  <%= link_to location["name"], near_by_detail_path(place_id: location["place_id"], 
+                                                            search_string: params[:search_string] ? params[:search_string] : "",
+                                                            search_option: params[:search_option] ? params[:search_option] : "",
+                                                            redirect: true) %>
+                </h3>
+                <% if location["rating"] %>
+                  <h4>
+                    <b>景點評分：</b><span style="color: #e7711b;"><%= location["rating"] %>&nbsp</span>
+                    <% location["rating"].floor.times do %>
+                      <span class="glyphicon glyphicon-star" style="top: 3px; color: #e7711b;"></span>
+                    <% end %>
+                    <% (5-location["rating"].floor).times do %>
+                      <span class="glyphicon glyphicon-star-empty" style="top: 3px; color: #e7711b;"></span>
+                    <% end %>
+                  </h4>
+                <% end %>
+                <h4><b>景點分類：</b><%= location["types"] %></h4>
+                <h4><b>景點距離：</b><%= @distance[i]["distance"]["text"] %>, 步行 <%= @distance[i]["duration"]["text"] %>鐘</h4>
+              </div>
+            </div>           
+           <% end %>           
+        <% end %>          
       </div>
     </div>
-    <br><br><br><br>
-  </div>   
-<% end %>
+  </div>
+  <br><br><br><br>
+</div>   
+
+
+<script type="text/javascript">
+  <% if @response  %>
+    <% location_array = @response.map {|r| [r["name"], r["geometry"]["location"]["lat"], r["geometry"]["location"]["lng"], r["rating"] ? r["rating"].to_s : "N/A"]} %>
+  
+    var locations = <%= raw location_array %>;
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      zoom: 14,
+      center: new google.maps.LatLng(<%= @coordinate["lat"] %>, <%= @coordinate["lng"] %>),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+
+    for (i = 0; i < locations.length; i++) {  
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map,
+        icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent("<h5><b>"+locations[i][0]+"</b></h5>"+"景點評分: "+locations[i][3]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+
+    marker = new google.maps.Marker({
+      position: new google.maps.LatLng(<%= @coordinate["lat"] %>, <%= @coordinate["lng"] %>),
+      map: map,
+      icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+    });
+
+  <% end %>      
+</script>
+
+<script>
+  function toggle_visibility(id1, id2) {
+     var e1 = document.getElementById(id1);
+     if(e1.style.display == 'block')
+        e1.style.display = 'none';
+     else
+        e1.style.display = 'block';
+
+     var e2= document.getElementById(id2);
+     if(e2.text == '顯示地圖')
+        e2.text = '隱藏地圖';
+     else
+        e2.text = '顯示地圖';      
+  }
+</script>

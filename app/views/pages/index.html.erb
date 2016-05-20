@@ -102,10 +102,10 @@
     <div>
       <!-- Nav tabs -->
       <ul class="nav nav-tabs">
-        <li class="active"> <%= link_to "關鍵字搜尋",    "#tab1", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
-        <li>                <%= link_to "搜尋Place ID", "#tab2", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
-        <li>                <%= link_to "得到地點詳情",  "#tab3", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
-        <li>                <%= link_to "Place ID搜尋", "#tab4", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>                              
+        <li class="active"> <%= link_to "關鍵字搜尋地點",    "#tab1", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
+        <li>                <%= link_to "PID搜尋地點", "#tab2", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li> 
+        <li>                <%= link_to "搜尋PID", "#tab3", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
+        <li>                <%= link_to "得到地點詳情",  "#tab4", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
       </ul>
     
       <!-- Tab panes -->
@@ -135,41 +135,41 @@
         <div class="tab-pane" id="tab2">
           <br><br>
           <div class="well">
-            <h4>搜尋 "台北市" Place ID </h4>
-            <h5><%= link_to get_place_id_url+"?search_string=台北市", 
-                    get_place_id_path(search_string: "台北市"), :target => "_blank" %></h5>                        
-          </div>          
-        </div>
-        <div class="tab-pane" id="tab3">
-          <br><br>
-          <div class="well">
-            <h4>得到 "通堂拉麵" 地點詳情 ( ID從Place ID搜尋得到 ) </h4>
-            <h5><%= link_to get_detail_url+"?place_id=ChIJGaKzQLFp5TQRTpMN05kfffQ", 
-                    get_detail_path(place_id: "ChIJGaKzQLFp5TQRTpMN05kfffQ"), :target => "_blank" %></h5>                        
-          </div>      
-        </div>  
-        <div class="tab-pane" id="tab4">
-          <br><br>
-          <div class="well">
-            <h4>搜尋 "中正紀念堂" "附近景點" ( ID從Place ID搜尋得到 )</h4>
+            <h4>搜尋 "中正紀念堂" "附近景點" ( Place ID從『搜尋PID』得到 )</h4>
             <h5>
               <%= link_to search_by_place_id_url+"?place_id=ChIJTamiuZ2pQjQRsmnfkkID6UM&search_option=景點", 
                           search_by_place_id_path(search_option: "景點", place_id: "ChIJTamiuZ2pQjQRsmnfkkID6UM"), :target => "_blank" %>
             </h5>
             <br>
-            <h4>搜尋 "中正紀念堂" "附近餐廳" ( ID從Place ID搜尋得到 )</h4>
+            <h4>搜尋 "中正紀念堂" "附近餐廳" ( Place ID從『搜尋PID』得到 )</h4>
             <h5>
               <%= link_to search_by_place_id_url+"?place_id=ChIJTamiuZ2pQjQRsmnfkkID6UM&search_option=餐廳", 
                           search_by_place_id_path(search_option: "餐廳", place_id: "ChIJTamiuZ2pQjQRsmnfkkID6UM"), :target => "_blank" %>
             </h5>
             <br>
-            <h4>搜尋 "中正紀念堂" "附近購物" ( ID從Place ID搜尋得到 )</h4>
+            <h4>搜尋 "中正紀念堂" "附近購物" ( Place ID從『搜尋PID』得到 )</h4>
             <h5>
               <%= link_to search_by_place_id_url+"?place_id=ChIJTamiuZ2pQjQRsmnfkkID6UM&search_option=購物", 
                           search_by_place_id_path(search_option: "購物", place_id: "ChIJTamiuZ2pQjQRsmnfkkID6UM"), :target => "_blank" %>
             </h5>                            
           </div>           
-        </div>                      
+        </div>           
+        <div class="tab-pane" id="tab3">
+          <br><br>
+          <div class="well">
+            <h4>搜尋 "台北市" Place ID </h4>
+            <h5><%= link_to get_place_id_url+"?search_string=台北市", 
+                    get_place_id_path(search_string: "台北市"), :target => "_blank" %></h5>                        
+          </div>          
+        </div>
+        <div class="tab-pane" id="tab4">
+          <br><br>
+          <div class="well">
+            <h4>得到 "通堂拉麵" 地點詳情 ( Place ID從『搜尋PID』得到 ) </h4>
+            <h5><%= link_to get_detail_url+"?place_id=ChIJGaKzQLFp5TQRTpMN05kfffQ", 
+                    get_detail_path(place_id: "ChIJGaKzQLFp5TQRTpMN05kfffQ"), :target => "_blank" %></h5>                        
+          </div>      
+        </div>                     
       </div>
     </div>
     <br><br><br>

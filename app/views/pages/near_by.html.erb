@@ -27,7 +27,7 @@
       <!-- Tab panes -->
       <div class="tab-content">
         <div  class="tab-pane active" id="attraction">
-          <% for location in @response %> 
+          <% @response.each_with_index do |location, i| %> 
             <% if location["photos"] %>
               <% photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
                              location["photos"][0]["photo_reference"] + 
@@ -60,6 +60,7 @@
                     </h4>
                   <% end %>
                   <h4><b>景點分類：</b><%= location["types"] %></h4>
+                  <h4><b>景點距離：</b><%= @distance[i]["distance"]["text"] %>, 步行 <%= @distance[i]["duration"]["text"] %>鐘</h4>
                 </div>
               </div>           
              <% end %>           

@@ -34,18 +34,13 @@ class PagesController < ApplicationController
     @coordinate =  get_geocode_by_place_id(params["place_id"])
 
     # 3. Use the coordinate to for google place nearbysearch api
-    google_nearbysearch_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?language=zh-TW&"
-    keyword = params[:search_option] == "景點" ? "景點" : params[:search_option] == "餐廳" ? "餐廳|美食|小吃" : "便利商店|超市|百貨公司"
-    query_string = "location=#{@coordinate["lat"]},#{@coordinate["lng"]}&rankby=distance&keyword=#{keyword}"   
-
-    api_key = "&key=#{ENV["google_api_key"]}"
-    url = google_nearbysearch_url + query_string + api_key
-    encoded_url = URI.encode(url)
-    uri = URI.parse(encoded_url)
-    @response = JSON.parse(Net::HTTP.get(uri))["results"]
+    @response = nearby_search_by_coordinate(@coordinate["lat"], @coordinate["lng"], params[:search_option])
+    origins = "#{@coordinate["lat"]},#{@coordinate["lng"]}"
+    destinations = @response.map{|r| "#{r["geometry"]["location"]["lat"]},#{r["geometry"]["location"]["lng"]}"}.join("|")
+    @distance = get_distance_matrix(origins, destinations)
 
     SearchCount.first.update(cnt2: SearchCount.first.cnt2+1)  
-binding.pry
+
   end
 
   def near_by_detail
@@ -89,6 +84,11 @@ binding.pry
 
     @coordinate = get_geocode_by_place_id(params["place_id"])
     @response = nearby_search_by_coordinate(@coordinate["lat"], @coordinate["lng"], params[:search_option])
+
+    origins = "#{@coordinate["lat"]},#{@coordinate["lng"]}"
+    destinations = @response.map{|r| "#{r["geometry"]["location"]["lat"]},#{r["geometry"]["location"]["lng"]}"}.join("|")
+    @distance = get_distance_matrix(origins, destinations)
+
     @response_json = Hash.new
     @response_json["results"] = Array.new
 
@@ -106,6 +106,8 @@ binding.pry
       tmp["place_id"] = r["place_id"]
       tmp["rating"] = r["rating"]
       tmp["types"] = r["types"]
+      tmp["distance"] = @distance[i]["distance"]["text"]
+      tmp["duration"] = @distance[i]["duration"]["text"]
       @response_json["results"] << tmp
     end
     SearchCount.first.update(cnt5: SearchCount.first.cnt5+1)  
@@ -168,8 +170,8 @@ binding.pry
   private
   def auto_complete_by_keyword(keyword)
     google_autocomplete_url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?language=zh-TW&"
-    query_string = "input=#{keyword}"
-    api_key = "&key=#{ENV["google_api_key"]}"
+    query_string = "input=#{keyword}&"
+    api_key = "key=#{ENV["google_api_key"]}"
     url = google_autocomplete_url + query_string + api_key
     encoded_url = URI.encode(url)
     uri = URI.parse(encoded_url)
@@ -178,8 +180,8 @@ binding.pry
 
   def get_geocode_by_place_id(place_id)
     google_geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?"
-    query_string = "place_id=#{place_id}"
-    api_key = "&key=#{ENV["google_api_key"]}"
+    query_string = "place_id=#{place_id}&"
+    api_key = "key=#{ENV["google_api_key"]}"
     url = google_geocode_url + query_string + api_key
     encoded_url = URI.encode(url)
     uri = URI.parse(encoded_url)
@@ -189,8 +191,8 @@ binding.pry
   def nearby_search_by_coordinate(lat, lng, option)
     google_nearbysearch_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?language=zh-TW&"
     keyword = option == "景點" ? "景點" : option == "餐廳" ? "餐廳|美食|小吃" : "便利商店|超市|百貨公司"
-    query_string = "location=#{lat},#{lng}&rankby=distance&keyword=#{keyword}"      
-    api_key = "&key=#{ENV["google_api_key"]}"
+    query_string = "location=#{lat},#{lng}&rankby=distance&keyword=#{keyword}&"      
+    api_key = "key=#{ENV["google_api_key"]}"
     url = google_nearbysearch_url + query_string + api_key
     encoded_url = URI.encode(url)
     uri = URI.parse(encoded_url)
@@ -199,11 +201,23 @@ binding.pry
 
   def get_place_detail(place_id)
     google_detail_url = "https://maps.googleapis.com/maps/api/place/details/json?language=zh-TW&"
-    query_string = "placeid=#{place_id}"
-    api_key = "&key=#{ENV["google_api_key"]}"
+    query_string = "placeid=#{place_id}&"
+    api_key = "key=#{ENV["google_api_key"]}"
     url = google_detail_url + query_string + api_key
     encoded_url = URI.encode(url)
     uri = URI.parse(encoded_url)
-    @place = JSON.parse(Net::HTTP.get(uri))["result"]    
+    JSON.parse(Net::HTTP.get(uri))["result"]    
   end
+
+  def get_distance_matrix(origins, destinations)
+    google_distance_url = "https://maps.googleapis.com/maps/api/distancematrix/json?language=zh-TW&mode=walking&"
+    origins = "origins=#{origins}&"
+    destinations = "destinations=#{destinations}&"
+    api_key = "key=#{ENV["google_api_key"]}"
+    url = google_distance_url + origins + destinations + api_key
+    encoded_url = URI.encode(url)
+    uri = URI.parse(encoded_url)
+
+    JSON.parse(Net::HTTP.get(uri))["rows"][0]["elements"]
+  end  
 end

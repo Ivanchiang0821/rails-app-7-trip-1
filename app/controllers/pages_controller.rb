@@ -6,18 +6,20 @@ class PagesController < ApplicationController
       # 1. match the autocomplete location
       @place = auto_complete_by_keyword(params[:search_string])
 
-      if @place["types"].include?("geocode")
-        # 2. Get geocoding
-        @coordinate = get_geocode_by_place_id(@place["place_id"])
-        # 3. Use the coordinate to for google place nearbysearch api
-        @response = nearby_search_by_coordinate(@coordinate["lat"], @coordinate["lng"], params[:search_option]).sort_by {|r| r["rating"].to_s}.reverse
-      else
-        redirect_to detail_path(place_id: @place["place_id"], 
-                                search_string: params[:search_string] ? params[:search_string] : "",
-                                search_option: params[:search_option] ? params[:search_option] : "", 
-                                redirect: false)
+      if @place
+        if !@place["types"] | @place["types"].include?("geocode")
+          # 2. Get geocoding
+          @coordinate = get_geocode_by_place_id(@place["place_id"])
+          # 3. Use the coordinate to for google place nearbysearch api
+          @response = nearby_search_by_coordinate(@coordinate["lat"], @coordinate["lng"], params[:search_option]).sort_by {|r| r["rating"].to_s}.reverse
+        else
+          redirect_to detail_path(place_id: @place["place_id"], 
+                                  search_string: params[:search_string] ? params[:search_string] : "",
+                                  search_option: params[:search_option] ? params[:search_option] : "", 
+                                  redirect: false)
+        end
+        SearchCount.first.update(cnt0: SearchCount.first.cnt0+1)  
       end
-      SearchCount.first.update(cnt0: SearchCount.first.cnt0+1)  
     end  
     
   end

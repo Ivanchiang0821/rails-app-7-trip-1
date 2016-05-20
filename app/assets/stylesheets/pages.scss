@@ -1,3 +1,44 @@
 // Place all the styles related to the pages controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+table.table-borderless thead tr th {
+  border: none;
+}
+
+table.table-borderless tbody tr td {
+  vertical-align: middle;
+}
+
+#detail-well h5 {
+  font-size: 1.1em;
+  font-weight: 300;
+  line-height: 1.5em;
+}
+
+#openhour h5 {
+  font-size: 0.9em;
+  font-weight: 300;
+}
+
+div.media-body h4 {
+  font-weight: 300;
+  line-height: 1.3em;
+}
+
+#index-h4 h4 {
+  font-weight: 300;
+  line-height: 1.3em;  
+}
+
+#detail-label {
+  display: inline-block;
+  vertical-align: top;
+}
+
+#detail-label span{
+  margin-right: 5px;
+}
+
+#detail-label span a:hover{
+  text-decoration: none;
+}

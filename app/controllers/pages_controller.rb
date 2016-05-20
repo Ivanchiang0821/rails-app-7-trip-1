@@ -1,115 +1,200 @@
 class PagesController < ApplicationController
 
   def index
-    #search_tripadvisor("Taipei")
+    
     if params[:search_string]
-      # @location = Location.new
-      # @location.address = params[:search_string]
-      # coordinates = Geocoder.coordinates(params[:search_string])
-      # @location.latitude = coordinates[0]
-      # @location.longitude = coordinates[1]
+      # 1. match the autocomplete location
+      @place = auto_complete_by_keyword(params[:search_string])
 
-      #https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=500&types=food&name=cruise&key=YOUR_API_KEY
-      #https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurants+in+Sydney&key=YOUR_API_KEY
-      #https://maps.googleapis.com/maps/api/place/radarsearch/json?location=51.503186,-0.126446&radius=5000&types=museum&key=YOUR_API_KEY
-      
-      require 'net/http'
-      require 'json'
+      if @place["types"].include?("geocode")
+        # 2. Get geocoding
+        @coordinate = get_geocode_by_place_id(@place["place_id"])
+        # 3. Use the coordinate to for google place nearbysearch api
+        @response = nearby_search_by_coordinate(@coordinate["lat"], @coordinate["lng"], params[:search_option]).sort_by {|r| r["rating"].to_s}.reverse
+      else
+        redirect_to detail_path(place_id: @place["place_id"], 
+                                search_string: params[:search_string] ? params[:search_string] : "",
+                                search_option: params[:search_option] ? params[:search_option] : "", 
+                                redirect: false)
+      end
 
-      # Use Text Search
-        # google_place_url = "https://maps.googleapis.com/maps/api/place/"
-        # search_method = "textsearch/json?language=zh-TW&"
-        # query_string = "query=景點+in+#{params[:search_string]}"
-        # api_key = "&key=#{ENV["google_api_key"]}"
-        # url = google_place_url + search_method + query_string + api_key
-        # encoded_url = URI.encode(url)
-        # uri = URI.parse(encoded_url)
-        # @response = JSON.parse(Net::HTTP.get(uri))["results"]
-
-      # Search pixnet
-      # https://emma.pixnet.cc/blog/articles/search?key=沖繩&per_page=10&format=json      
-        pixnet_place_url = "https://emma.pixnet.cc/blog/articles/search?&per_page=10&format=json&client_id=0e53ce413fa98fb9040513dab953e169&"
-        query_string = "key=#{params[:search_string]}&(自助|遊記|美食)"
-        url = pixnet_place_url + query_string 
-        encoded_url = URI.encode(url)
-        uri = URI.parse(encoded_url)
-        @articles = JSON.parse(Net::HTTP.get(uri))["articles"]
-        @articles = @articles.sort_by {|a| -a["hits"]["total"]}
     end    
     
   end
 
-  def gen_json
-      require 'net/http'
-      require 'json'
-
-      # Use Text Search
-        # google_place_url = "https://maps.googleapis.com/maps/api/place/"
-        # search_method = "textsearch/json?language=zh-TW&"
-        # query_string = "query=景點+in+#{params[:search_string]}"
-        # api_key = "&key=#{ENV["google_api_key"]}"
-        # url = google_place_url + search_method + query_string + api_key
-        # encoded_url = URI.encode(url)
-        # uri = URI.parse(encoded_url)
-        # @response = JSON.parse(Net::HTTP.get(uri))["results"]    
-        # @response_json = Array.new
-
-        # @response.each_with_index do |r, i|
-        #   if r["photos"]
-        #     tmp = Hash.new
-        #     tmp["name"] = r["name"]
-        #     tmp["address"] = r["address"]
-        #     tmp["lat"] = r["geometry"]["location"]["lat"]
-        #     tmp["lng"] = r["geometry"]["location"]["lng"]
-        #     tmp["photo_url"] =  "https://maps.googleapis.com/maps/api/place/photo?maxwidth=#{r["photos"][0]["width"]}&photoreference=" + r["photos"][0]["photo_reference"] + "&key=#{ENV["google_api_key"]}"
-        #     tmp["photo_width"] = r["photos"][0]["width"]
-        #     tmp["photo_height"] = r["photos"][0]["height"]       
-        #     tmp["place_id"] = r["place_id"]
-        #     tmp["rating"] = r["rating"]
-        #     @response_json << tmp
-        #   end
-        # end
-
-        # render json: @response_json
-
-      # Search pixnet
-        pixnet_place_url = "https://emma.pixnet.cc/blog/articles/search?&per_page=10&format=json&client_id=0e53ce413fa98fb9040513dab953e169&"
-        query_string = "key=#{params[:search_string]}&(自助|遊記|美食)"
-        url = pixnet_place_url + query_string 
-        encoded_url = URI.encode(url)
-        uri = URI.parse(encoded_url)
-        @articles = JSON.parse(Net::HTTP.get(uri))["articles"]
-        @articles = @articles.sort_by {|a| -a["hits"]["total"]}
-        @article_json = Array.new
-
-        @articles.each_with_index do |a, i|
-          if !["職場甘苦","政論人文","醫療保健","結婚紀錄","親子育兒","生活綜合"].any? {|string| a["site_category"].include?(string)} and 
-            a["thumb"] != "https://s.pixfs.net/mobile/images/blog/article-image.png"
-            tmp = Hash.new
-            tmp["title"] = a["title"]
-            tmp["photo_url"] =  a["thumb"]
-            tmp["photo_width"] = "90"
-            tmp["photo_height"] = "90" 
-            tmp["category"] = a["category"]
-            tmp["site_category"] = a["site_category"]
-            tmp["hits"] = a["hits"]["total"]
-            @article_json << tmp
-          end
-        end
-
-        render json: @article_json
-        #render json: @articles
+  def detail
+    @place = get_place_detail(params[:place_id])
   end
 
+  def near_by
+    # 2. Get geocoding
+    @coordinate =  get_geocode_by_place_id(params["place_id"])
+
+    # 3. Use the coordinate to for google place nearbysearch api
+    google_nearbysearch_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?language=zh-TW&"
+    keyword = params[:search_option] == "景點" ? "景點" : params[:search_option] == "餐廳" ? "餐廳|美食|小吃" : "便利商店|超市|百貨公司"
+    query_string = "location=#{@coordinate["lat"]},#{@coordinate["lng"]}&rankby=distance&keyword=#{keyword}"   
+
+    api_key = "&key=#{ENV["google_api_key"]}"
+    url = google_nearbysearch_url + query_string + api_key
+    encoded_url = URI.encode(url)
+    uri = URI.parse(encoded_url)
+    @response = JSON.parse(Net::HTTP.get(uri))["results"]
+
+  end
+
+  def near_by_detail
+    @place = get_place_detail(params[:place_id])
+  end
+
+  def search_by_keyword_json
+    require 'net/http'
+    require 'json'
+
+    @place = auto_complete_by_keyword(params[:search_string])
+    @coordinate = get_geocode_by_place_id(@place["place_id"])
+    @response = nearby_search_by_coordinate(@coordinate["lat"], @coordinate["lng"], params[:search_option])
+    @response_json = Array.new
+
+    @response.each_with_index do |r, i|
+      tmp = Hash.new
+      tmp["name"] = r["name"]
+      tmp["address"] = r["vicinity"]
+      tmp["lat"] = r["geometry"]["location"]["lat"]
+      tmp["lng"] = r["geometry"]["location"]["lng"]
+      if r["photos"]
+        tmp["photo_url"] =  "https://maps.googleapis.com/maps/api/place/photo?maxwidth=#{r["photos"][0]["width"]}&photoreference=" + r["photos"][0]["photo_reference"] + "&key=#{ENV["google_api_key"]}"
+        tmp["photo_width"] = r["photos"][0]["width"]
+        tmp["photo_height"] = r["photos"][0]["height"]       
+      end
+      tmp["place_id"] = r["place_id"]
+      tmp["rating"] = r["rating"]
+      tmp["types"] = r["types"]
+      @response_json << tmp
+    end
+
+    render json: @response_json
+  end
+
+  def search_by_place_id_json
+    require 'net/http'
+    require 'json'
+
+    @coordinate = get_geocode_by_place_id(params["place_id"])
+    @response = nearby_search_by_coordinate(@coordinate["lat"], @coordinate["lng"], params[:search_option])
+    @response_json = Array.new
+
+    @response.each_with_index do |r, i|
+      tmp = Hash.new
+      tmp["name"] = r["name"]
+      tmp["address"] = r["vicinity"]
+      tmp["lat"] = r["geometry"]["location"]["lat"]
+      tmp["lng"] = r["geometry"]["location"]["lng"]
+      if r["photos"]
+        tmp["photo_url"] =  "https://maps.googleapis.com/maps/api/place/photo?maxwidth=#{r["photos"][0]["width"]}&photoreference=" + r["photos"][0]["photo_reference"] + "&key=#{ENV["google_api_key"]}"
+        tmp["photo_width"] = r["photos"][0]["width"]
+        tmp["photo_height"] = r["photos"][0]["height"]       
+      end
+      tmp["place_id"] = r["place_id"]
+      tmp["rating"] = r["rating"]
+      tmp["types"] = r["types"]
+      @response_json << tmp
+    end
+
+    render json: @response_json        
+  end
+
+  def get_place_id_json
+    require 'net/http'
+    require 'json'
+
+    @place = auto_complete_by_keyword(params[:search_string])    
+    @place_json = Hash.new
+    @place_json["place_id"] = @place["place_id"]
+    render json: @place_json    
+  end
+
+  def get_detail_json
+    require 'net/http'
+    require 'json'
+
+    @place = get_place_detail(params[:place_id])    
+    @place_json = Hash.new
+
+    @place_json["name"] = @place["name"]
+    @place_json["address"] = @place["formatted_address"] if @place["formatted_address"]
+    @place_json["phone"] = @place["formatted_phone_number"] if @place["formatted_phone_number"]
+    @place_json["website"] = @place["website"] if @place["website"]        
+    @place_json["rating"] = @place["rating"] if @place["rating"]
+    @place_json["types"] = @place["types"]    
+    @place_json["place_id"] = @place["place_id"]
+    @place_json["lat"] = @place["geometry"]["location"]["lat"]
+    @place_json["lng"] = @place["geometry"]["location"]["lng"]
+    @place_json["open_now"] = @place["opening_hours"]["open_now"]
+    @place_json["opening_hours"] = @place["opening_hours"]["weekday_text"]
+    @place_json["user_ratings_total"] = @place["user_ratings_total"]
+    @place_json["google_map_url"] = @place["url"]
+
+    @place_json["photos"] = Array.new
+    @place["photos"].each_with_index do |p, i|
+      tmp = Hash.new
+      tmp["width"]  = p["width"]      
+      tmp["height"] = p["height"]      
+      tmp["url"] = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=#{p["width"]}&photoreference=" + p["photo_reference"] + "&key=#{ENV["google_api_key"]}"
+      @place_json["photos"] << tmp
+    end
+
+    @place_json["reviews"] = Array.new
+    @place["reviews"].each_with_index do |r, i|
+      tmp = Hash.new
+      tmp["profile_photo_url"]  = r["profile_photo_url"] ? "https:" + r["profile_photo_url"].to_s : nil
+      tmp["rating"] = r["rating"]      
+      tmp["text"] = r["text"]      
+      @place_json["reviews"] << tmp
+    end
+
+    render json: @place_json    
+  end
 
   private
-  def search_tripadvisor(query_string)
-    require 'open-uri'
-    binding.pry
-    link = "https://www.tripadvisor.com.tw/Attractions-g293913-Activities-Taipei.html"
-    doc = Nokogiri::HTML(open(link))  
-
+  def auto_complete_by_keyword(keyword)
+    google_autocomplete_url = "https://maps.googleapis.com/maps/api/place/autocomplete/json?language=zh-TW&"
+    query_string = "input=#{keyword}"
+    api_key = "&key=#{ENV["google_api_key"]}"
+    url = google_autocomplete_url + query_string + api_key
+    encoded_url = URI.encode(url)
+    uri = URI.parse(encoded_url)
+    JSON.parse(Net::HTTP.get(uri))["predictions"].first    
   end
 
+  def get_geocode_by_place_id(place_id)
+    google_geocode_url = "https://maps.googleapis.com/maps/api/geocode/json?"
+    query_string = "place_id=#{place_id}"
+    api_key = "&key=#{ENV["google_api_key"]}"
+    url = google_geocode_url + query_string + api_key
+    encoded_url = URI.encode(url)
+    uri = URI.parse(encoded_url)
+    JSON.parse(Net::HTTP.get(uri))["results"].first["geometry"]["location"]    
+  end
 
+  def nearby_search_by_coordinate(lat, lng, option)
+    google_nearbysearch_url = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?language=zh-TW&"
+    keyword = option == "景點" ? "景點" : option == "餐廳" ? "餐廳|美食|小吃" : "便利商店|超市|百貨公司"
+    query_string = "location=#{lat},#{lng}&rankby=distance&keyword=#{keyword}"      
+    api_key = "&key=#{ENV["google_api_key"]}"
+    url = google_nearbysearch_url + query_string + api_key
+    encoded_url = URI.encode(url)
+    uri = URI.parse(encoded_url)
+    JSON.parse(Net::HTTP.get(uri))["results"]
+  end
+
+  def get_place_detail(place_id)
+    google_detail_url = "https://maps.googleapis.com/maps/api/place/details/json?language=zh-TW&"
+    query_string = "placeid=#{place_id}"
+    api_key = "&key=#{ENV["google_api_key"]}"
+    url = google_detail_url + query_string + api_key
+    encoded_url = URI.encode(url)
+    uri = URI.parse(encoded_url)
+    @place = JSON.parse(Net::HTTP.get(uri))["result"]    
+  end
 end

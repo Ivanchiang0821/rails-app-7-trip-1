@@ -105,7 +105,7 @@
         <li class="active"> <%= link_to "關鍵字搜尋地點",    "#tab1", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
         <li>                <%= link_to "PID搜尋地點", "#tab2", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li> 
         <li>                <%= link_to "搜尋PID", "#tab3", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
-        <li>                <%= link_to "得到地點詳情",  "#tab4", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
+        <li>                <%= link_to "搜尋地點詳情",  "#tab4", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
       </ul>
     
       <!-- Tab panes -->
@@ -165,7 +165,7 @@
         <div class="tab-pane" id="tab4">
           <br><br>
           <div class="well">
-            <h4>得到 "通堂拉麵" 地點詳情 ( Place ID從『搜尋PID』得到 ) </h4>
+            <h4>搜尋 "通堂拉麵" 地點詳情 ( Place ID從『搜尋PID』得到 ) </h4>
             <h5><%= link_to get_detail_url+"?place_id=ChIJGaKzQLFp5TQRTpMN05kfffQ", 
                     get_detail_path(place_id: "ChIJGaKzQLFp5TQRTpMN05kfffQ"), :target => "_blank" %></h5>                        
           </div>      

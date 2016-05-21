@@ -11,7 +11,9 @@ class PagesController < ApplicationController
           # 2. Get geocoding
           @coordinate = get_geocode_by_place_id(@place["place_id"])
           # 3. Use the coordinate to for google place nearbysearch api
-          @response = nearby_search_by_coordinate(@coordinate["lat"], @coordinate["lng"], params[:search_option]).sort_by {|r| r["rating"].to_s}.reverse
+          search_result = nearby_search_by_coordinate(@coordinate["lat"], @coordinate["lng"], params[:search_option])
+          @response = search_result["results"].sort_by {|r| r["rating"].to_s}.reverse
+          @next_page_token = search_result["next_page_token"]
         else
           redirect_to detail_path(place_id: @place["place_id"], 
                                   search_string: params[:search_string] ? params[:search_string] : "",
@@ -34,7 +36,10 @@ class PagesController < ApplicationController
     @coordinate =  get_geocode_by_place_id(params["place_id"])
 
     # 3. Use the coordinate to for google place nearbysearch api
-    @response = nearby_search_by_coordinate(@coordinate["lat"], @coordinate["lng"], params[:search_option])
+    search_result = nearby_search_by_coordinate(@coordinate["lat"], @coordinate["lng"], params[:search_option])
+    @response = search_result["results"]
+    @next_page_token = search_result["next_page_token"]
+    
     origins = "#{@coordinate["lat"]},#{@coordinate["lng"]}"
     destinations = @response.map{|r| "#{r["geometry"]["location"]["lat"]},#{r["geometry"]["location"]["lng"]}"}.join("|")
     @distance = get_distance_matrix(origins, destinations)
@@ -56,9 +61,10 @@ class PagesController < ApplicationController
     @coordinate = get_geocode_by_place_id(@place["place_id"])
     @response = nearby_search_by_coordinate(@coordinate["lat"], @coordinate["lng"], params[:search_option])
     @response_json = Hash.new
+    @response_json["next_page_token"] = @response["next_page_token"] if @response["next_page_token"]    
     @response_json["results"] = Array.new
 
-    @response.each_with_index do |r, i|
+    @response["results"].each_with_index do |r, i|
       tmp = Hash.new
       tmp["name"] = r["name"]
       tmp["address"] = r["vicinity"]
@@ -87,13 +93,14 @@ class PagesController < ApplicationController
     @response = nearby_search_by_coordinate(@coordinate["lat"], @coordinate["lng"], params[:search_option])
 
     origins = "#{@coordinate["lat"]},#{@coordinate["lng"]}"
-    destinations = @response.map{|r| "#{r["geometry"]["location"]["lat"]},#{r["geometry"]["location"]["lng"]}"}.join("|")
+    destinations = @response["results"].map{|r| "#{r["geometry"]["location"]["lat"]},#{r["geometry"]["location"]["lng"]}"}.join("|")
     @distance = get_distance_matrix(origins, destinations)
 
     @response_json = Hash.new
+    @response_json["next_page_token"] = @response["next_page_token"] if @response["next_page_token"]    
     @response_json["results"] = Array.new
 
-    @response.each_with_index do |r, i|
+    @response["results"].each_with_index do |r, i|
       tmp = Hash.new
       tmp["name"] = r["name"]
       tmp["address"] = r["vicinity"]
@@ -198,7 +205,7 @@ class PagesController < ApplicationController
     url = google_nearbysearch_url + query_string + api_key
     encoded_url = URI.encode(url)
     uri = URI.parse(encoded_url)
-    JSON.parse(Net::HTTP.get(uri))["results"]
+    JSON.parse(Net::HTTP.get(uri))
   end
 
   def get_place_detail(place_id)

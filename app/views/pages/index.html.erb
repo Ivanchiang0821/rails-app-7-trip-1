@@ -44,42 +44,48 @@
       <!-- Tab panes -->
       <div class="tab-content">
         <div  class="tab-pane active" id="attraction">
+          <br>
           <% @response.each do |location| %> 
             <% if location["photos"] %>
               <% photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
                              location["photos"][0]["photo_reference"] + 
                              "&key=#{ENV["google_api_key"]}" %>      
-              <div class="media">
-                <div class="media-left" style="padding-right: 80px;">
-                  <%= link_to "#" do %>
-                    <div style="width: 200px; height: 200px;">
-                      <%= image_tag(photo_url, class: 'media-object', style:"width: 100%; height: 100%; object-fit: contain;") %>                
-                    </div>
+            <% end %>
 
-                  <% end %>
-                </div>
-                <div class="media-body" style="vertical-align: middle;">
-                  <h3 class="media-heading">
-                    <%= link_to location["name"], detail_path(place_id: location["place_id"], 
-                                                              search_string: params[:search_string] ? params[:search_string] : "",
-                                                              search_option: params[:search_option] ? params[:search_option] : "",
-                                                              redirect: true) %>
-                  </h3>
-                  <% if location["rating"] %>
-                    <h4>
-                      <b>景點評分：</b><span style="color: #e7711b;"><%= location["rating"] %>&nbsp</span>
-                      <% location["rating"].floor.times do %>
-                        <span class="glyphicon glyphicon-star" style="top: 3px; color: #e7711b;"></span>
-                      <% end %>
-                      <% (5-location["rating"].floor).times do %>
-                        <span class="glyphicon glyphicon-star-empty" style="top: 3px; color: #e7711b;"></span>
-                      <% end %>
-                    </h4>
-                  <% end %>
-                  <h4><b>景點分類：</b><%= location["types"] %></h4>
-                </div>            
-              </div>           
-             <% end %>           
+            <div class="media">
+              <div class="media-left" style="padding-right: 80px;">
+                <%= link_to "#" do %>
+                  <div style="width: 200px; height: 200px;">
+                    <% if location["photos"] %>
+                      <%= image_tag(photo_url, class: 'media-object', style:"width: 85%; height: 85%; border-radius: 50%;") %>
+                    <% else %>
+                      <%= image_tag("black.jpg", class: 'media-object', style:"width: 85%; height: 85%; border-radius: 50%;") %>
+                    <% end %>
+                  </div>
+
+                <% end %>
+              </div>
+              <div class="media-body" style="vertical-align: middle;">
+                <h3 class="media-heading">
+                  <%= link_to location["name"], detail_path(place_id: location["place_id"], 
+                                                            search_string: params[:search_string] ? params[:search_string] : "",
+                                                            search_option: params[:search_option] ? params[:search_option] : "",
+                                                            redirect: true) %>
+                </h3>
+                <% if location["rating"] %>
+                  <h4>
+                    <b>景點評分：</b><span style="color: #e7711b;"><%= location["rating"] %>&nbsp</span>
+                    <% location["rating"].floor.times do %>
+                      <span class="glyphicon glyphicon-star" style="top: 3px; color: #e7711b;"></span>
+                    <% end %>
+                    <% (5-location["rating"].floor).times do %>
+                      <span class="glyphicon glyphicon-star-empty" style="top: 3px; color: #e7711b;"></span>
+                    <% end %>
+                  </h4>
+                <% end %>
+                <h4><b>景點分類：</b><%= location["types"] %></h4>
+              </div>            
+            </div>            
           <% end %>          
         </div>
       </div>

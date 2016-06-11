@@ -28,7 +28,6 @@ class PagesController < ApplicationController
 
   def detail
     @place = get_place_detail(params[:place_id])
-    binding.pry
     SearchCount.first.update(cnt1: SearchCount.first.cnt1+1)
   end
 
@@ -51,7 +50,6 @@ class PagesController < ApplicationController
 
   def near_by_detail
     @place = get_place_detail(params[:place_id])
-    binding.pry
     SearchCount.first.update(cnt3: SearchCount.first.cnt3+1)  
   end
 

@@ -5,8 +5,8 @@
       <div class="col-xs-9">
         <%= form_tag '/index', method: :post do %>
           <div class="input-group">
-            <input type="text" class="form-control input-lg" id="gmap_search_input" name="search_string"  style="width: 80%; border-radius: 5px;">
-            <select id="gmap_search_select" class="selectpicker form-control input-lg" name="search_option"  style="width: 20%">
+            <input type="text" class="form-control input-lg" id="gmap_search_input" name="str"  style="width: 80%; border-radius: 5px;">
+            <select id="gmap_search_select" class="selectpicker form-control input-lg" name="opt"  style="width: 20%">
               <option>景點</option>
               <option>餐廳</option>
               <option>購物</option>
@@ -23,182 +23,39 @@
   </div>
 </div>
 
-<% if params[:search_string] and @place%>
+<% if params[:str] and @places %>
   <div class="index-container">
     <div class="well">
-      <h3 style="margin: 0"><%= @place["description"] %>
-        搜尋<%= params[:search_option] %>結果.... ( <%= link_to "隱藏地圖", "#", :id => "click", :onclick => "toggle_visibility('map', 'click');" %> )
+      <h3 style="margin: 0"><%= @places["auto_complete_str"] %>
+        搜尋<%= params[:opt] %>結果.... ( <%= link_to "隱藏地圖", "#", :id => "click", :onclick => "toggle_visibility('map', 'click');" %> )
       </h3>
     </div> 
     
     <div id="map" style="width: 100%; height: 400px; display: block"></div><br>  
 
     <div>
-      <!-- Nav tabs -->
-      <ul class="nav nav-tabs">
-        <li class="active">
-          <a href="#attraction" data-toggle="tab"><h4>景點</h4></a>
-        </li>
-      </ul>
-    
-      <!-- Tab panes -->
-      <div class="tab-content">
-        <div  class="tab-pane active" id="attraction">
-          <br>
-          <% @response.each do |location| %> 
-            <% if location["photos"] %>
-              <% photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                             location["photos"][0]["photo_reference"] + 
-                             "&key=#{ENV["google_api_key"]}" %>      
-            <% end %>
-
-            <div class="media">
-              <div class="media-left" style="padding-right: 80px;">
-                <%= link_to "#" do %>
-                  <div style="width: 200px; height: 200px;">
-                    <% if location["photos"] %>
-                      <%= image_tag(photo_url, class: 'media-object', style:"width: 85%; height: 85%; border-radius: 50%;") %>
-                    <% else %>
-                      <%= image_tag("black.jpg", class: 'media-object', style:"width: 85%; height: 85%; border-radius: 50%;") %>
-                    <% end %>
-                  </div>
-
-                <% end %>
-              </div>
-              <div class="media-body" style="vertical-align: middle;">
-                <h3 class="media-heading">
-                  <%= link_to location["name"], detail_path(place_id: location["place_id"], 
-                                                            search_string: params[:search_string] ? params[:search_string] : "",
-                                                            search_option: params[:search_option] ? params[:search_option] : "",
-                                                            redirect: true) %>
-                </h3>
-                <% if location["rating"] %>
-                  <h4>
-                    <b>景點評分：</b><span style="color: #e7711b;"><%= location["rating"] %>&nbsp</span>
-                    <% location["rating"].floor.times do %>
-                      <span class="glyphicon glyphicon-star" style="top: 3px; color: #e7711b;"></span>
-                    <% end %>
-                    <% (5-location["rating"].floor).times do %>
-                      <span class="glyphicon glyphicon-star-empty" style="top: 3px; color: #e7711b;"></span>
-                    <% end %>
-                  </h4>
-                <% end %>
-                <h4><b>景點分類：</b><%= location["types"] %></h4>
-              </div>            
-            </div>            
-          <% end %>          
-        </div>
-      </div>
+      <%= render "place_list", nearby: false %> 
     </div>
     <br><br><br><br>
   </div>   
 <% else %>
-  <div class="index-container">
-    <br>
-    <h1>JSON範例</h1>
-    <br> 
-    <div>
-      <!-- Nav tabs -->
-      <ul class="nav nav-tabs">
-        <li class="active"> <%= link_to "修改紀錄",         "#tab1", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
-        <li>                <%= link_to "關鍵字搜尋地點",    "#tab2", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
-        <li>                <%= link_to "PID搜尋地點",      "#tab3", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li> 
-        <li>                <%= link_to "搜尋PID",         "#tab4", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
-        <li>                <%= link_to "搜尋地點詳情",     "#tab5", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
-      </ul>
-    
-      <!-- Tab panes -->
-      <div class="tab-content">
-        <div class="tab-pane active" id="tab1">
-          <br><br>
-          <div class="well">
-            <%= render "history" %>
-          </div>          
-        </div>         
-        <div class="tab-pane" id="tab2">
-          <br><br>
-          <div class="well">
-            <h4>搜尋 "台北市" "景點" </h4>
-            <h5>
-              <%= link_to search_by_keyword_url+"?search_string=台北市&search_option=景點", 
-                          search_by_keyword_path(search_option: "景點", search_string: "台北市"), :target => "_blank" %>
-            </h5>
-            <br>                    
-            <h4>搜尋 "台北市" "餐廳" </h4>
-            <h5>
-              <%= link_to search_by_keyword_url+"?search_string=台北市&search_option=餐廳", 
-                          search_by_keyword_path(search_option: "餐廳", search_string: "台北市"), :target => "_blank" %>
-            </h5>
-            <br>
-            <h4>搜尋 "台北市" "購物" </h4>
-            <h5>
-              <%= link_to search_by_keyword_url+"?search_string=台北市&search_option=購物", 
-                          search_by_keyword_path(search_option: "購物", search_string: "台北市"), :target => "_blank" %>
-            </h5>                            
-          </div>          
-        </div>        
-        <div class="tab-pane" id="tab3">
-          <br><br>
-          <div class="well">
-            <h4>搜尋 "中正紀念堂" "附近景點" ( Place ID從『搜尋PID』得到 )</h4>
-            <h5>
-              <%= link_to search_by_place_id_url+"?place_id=ChIJTamiuZ2pQjQRsmnfkkID6UM&search_option=景點", 
-                          search_by_place_id_path(search_option: "景點", place_id: "ChIJTamiuZ2pQjQRsmnfkkID6UM"), :target => "_blank" %>
-            </h5>
-            <br>
-            <h4>搜尋 "中正紀念堂" "附近餐廳" ( Place ID從『搜尋PID』得到 )</h4>
-            <h5>
-              <%= link_to search_by_place_id_url+"?place_id=ChIJTamiuZ2pQjQRsmnfkkID6UM&search_option=餐廳", 
-                          search_by_place_id_path(search_option: "餐廳", place_id: "ChIJTamiuZ2pQjQRsmnfkkID6UM"), :target => "_blank" %>
-            </h5>
-            <br>
-            <h4>搜尋 "中正紀念堂" "附近購物" ( Place ID從『搜尋PID』得到 )</h4>
-            <h5>
-              <%= link_to search_by_place_id_url+"?place_id=ChIJTamiuZ2pQjQRsmnfkkID6UM&search_option=購物", 
-                          search_by_place_id_path(search_option: "購物", place_id: "ChIJTamiuZ2pQjQRsmnfkkID6UM"), :target => "_blank" %>
-            </h5>                            
-          </div>           
-        </div>           
-        <div class="tab-pane" id="tab4">
-          <br><br>
-          <div class="well">
-            <h4>搜尋 "台北市" Place ID </h4>
-            <h5><%= link_to get_place_id_url+"?search_string=台北市", 
-                    get_place_id_path(search_string: "台北市"), :target => "_blank" %></h5>                        
-          </div>          
-        </div>
-        <div class="tab-pane" id="tab5">
-          <br><br>
-          <div class="well">
-            <h4>搜尋 "通堂拉麵" 地點詳情 ( Place ID從『搜尋PID』得到 ) </h4>
-            <h5><%= link_to get_detail_url+"?place_id=ChIJGaKzQLFp5TQRTpMN05kfffQ", 
-                    get_detail_path(place_id: "ChIJGaKzQLFp5TQRTpMN05kfffQ"), :target => "_blank" %></h5>                        
-          </div>      
-        </div>                     
-      </div>
-    </div>
-    <br><br><br>
-  </div>
+  <%= render "json_example" %>
 <% end %>
 
-<script>
-  function initialize() {
-      var input = document.getElementById('gmap_search_input');
-      var autocomplete = new google.maps.places.Autocomplete(input);
-  }
 
-  google.maps.event.addDomListener(window, 'load', initialize);
-</script>
 
 <script type="text/javascript">
-  <% if @response  %>
-    <% location_array = @response.map {|r| [r["name"], r["geometry"]["location"]["lat"], r["geometry"]["location"]["lng"], r["rating"] ? r["rating"].to_s : "N/A"]} %>
+  <% if @places  %>
+    <% location_array = @places["results"].map {|r| [r["name"], 
+                                                    r["lat"], 
+                                                    r["lng"], 
+                                                    r["rating"] ? r["rating"].to_s : "N/A"]} %>
   
     var locations = <%= raw location_array %>;
 
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 14,
-      center: new google.maps.LatLng(<%= @coordinate["lat"] %>, <%= @coordinate["lng"] %>),
+      center: new google.maps.LatLng(<%= @places["auto_complete_lat"] %>, <%= @places["auto_complete_lng"] %>),
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
@@ -222,7 +79,7 @@
     }
 
     marker = new google.maps.Marker({
-      position: new google.maps.LatLng(<%= @coordinate["lat"] %>, <%= @coordinate["lng"] %>),
+      position: new google.maps.LatLng(<%= @places["auto_complete_lat"] %>, <%= @places["auto_complete_lng"] %>),
       map: map,
       icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
     });

@@ -16,16 +16,17 @@ gem 'simple_form'
 gem 'puma'
 
 gem 'pg'
+gem 'responders', '~> 2.0'
 
 # To use facebook API
-gem 'omniauth-facebook' # Facebook authentication
-gem "koala", "~> 1.10.0rc" # Facebook API
+# gem 'omniauth-facebook' # Facebook authentication
+# gem "koala", "~> 1.10.0rc" # Facebook API
 
 # To crawl/scrap
-gem 'nokogiri'
+#gem 'nokogiri'
 
 # To use GeoCoder, https://github.com/alexreisner/geocoder
-gem 'geocoder'
+#gem 'geocoder'
 
 # For security key
 gem "figaro"

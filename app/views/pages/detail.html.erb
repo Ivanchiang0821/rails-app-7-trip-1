@@ -3,8 +3,8 @@
   <div class="well" id="detail-well">
     <h1>
       <%= @place["name"] %>
-      <% if params["redirect"] == "true" %>
-        <%= link_to "返回", index_path(search_string: params[:search_string], search_option: params[:search_option]), class:"pull-right", style:"font-size: 0.7em" %>
+      <% if params[:redirect] == "true" %>
+        <%= link_to "返回", index_path(str: params[:str], opt: params[:opt]), class:"pull-right", style:"font-size: 0.7em" %>
       <% else %>
         <%= link_to "返回", index_path, class:"pull-right", style:"font-size: 0.7em" %>      
       <% end %>
@@ -23,31 +23,30 @@
       <% end %>
       <div id="detail-label">
         <span class="label label-default" style="font-size: 0.3em;">
-          <%= link_to "附近景點", near_by_path(place_id: @place["place_id"], 
-                                              ori_string: params["search_string"], 
-                                              ori_option: params["search_option"], 
-                                              search_string: @place["name"], 
-                                              search_option: "景點", 
-                                              redirect: params["redirect"]), 
+          <%= link_to "附近景點", near_by_path(pid: @place["pid"], 
+                                              ori_str: params[:str], 
+                                              ori_opt: params[:opt], 
+                                              str: @place["name"], 
+                                              opt: "景點", 
+                                              redirect: params[:redirect]), 
                                               style: "color: white;" %>
         </span>
         <span class="label label-default" style="font-size: 0.3em;">
-          <%= link_to "附近餐廳", near_by_path(place_id: @place["place_id"], 
-                                              ori_string: params["search_string"], 
-                                              ori_option: params["search_option"], 
-                                              search_string: @place["name"], 
-                                              search_option: "餐廳", 
-                                              redirect: params["redirect"]), 
+          <%= link_to "附近餐廳", near_by_path(pid: @place["pid"], 
+                                              ori_str: params[:str], 
+                                              ori_opt: params[:opt], 
+                                              str: @place["name"], 
+                                              opt: "餐廳", 
+                                              redirect: params[:redirect]), 
                                               style: "color: white;" %>
         </span>
         <span class="label label-default" style="font-size: 0.3em;">
-          <%= link_to "附近購物", near_by_path(place_id: @place["place_id"], 
-                                              ori_string: params["search_string"], 
-                                              ori_option: params["search_option"], 
-                                              search_string: @place["name"], 
-                                              ori_option: params["search_option"], 
-                                              search_option: "購物", 
-                                              redirect: params["redirect"]), 
+          <%= link_to "附近購物", near_by_path(pid: @place["pid"], 
+                                              ori_str: params[:str], 
+                                              ori_opt: params[:opt], 
+                                              str: @place["name"], 
+                                              opt: "購物", 
+                                              redirect: params[:redirect]), 
                                               style: "color: white;" %>
         </span>    
       </div>    
@@ -59,30 +58,30 @@
       <div class="row" style="padding-left: 20px;">
           <% photo_url_prefix = "https://maps.googleapis.com/maps/api/place/photo?maxheight=400&key=#{ENV["google_api_key"]}&photoreference=" %> 
         <% if @place["photos"][0] %>
-          <%= image_tag photo_url_prefix + @place["photos"][0]["photo_reference"], style:"height: 130px; max-width: 200px;" %>
+          <%= image_tag photo_url_prefix + @place["photos"][0]["photo_ref"], style:"height: 130px; max-width: 200px;" %>
         <% end %>
         <% if @place["photos"][1] %>
-          <%= image_tag photo_url_prefix + @place["photos"][1]["photo_reference"], style:"height: 130px; max-width: 200px;" %>
+          <%= image_tag photo_url_prefix + @place["photos"][1]["photo_ref"], style:"height: 130px; max-width: 200px;" %>
         <% end %>
         <% if @place["photos"][2] %>
-          <%= image_tag photo_url_prefix + @place["photos"][2]["photo_reference"], style:"height: 130px; max-width: 200px;" %>
+          <%= image_tag photo_url_prefix + @place["photos"][2]["photo_ref"], style:"height: 130px; max-width: 200px;" %>
         <% end %>  
         <% if @place["photos"][3] %>
-          <%= image_tag photo_url_prefix + @place["photos"][3]["photo_reference"], style:"height: 130px; max-width: 200px;" %>
+          <%= image_tag photo_url_prefix + @place["photos"][3]["photo_ref"], style:"height: 130px; max-width: 200px;" %>
         <% end %>                  
       </div>
     <% end %>
 
     <br>
 
-    <h5><b>地址：</b><%= @place["formatted_address"] %></h5>
+    <h5><b>地址：</b><%= @place["address"] %></h5>
 
-    <h5><b>座標：</b>[<%= @place["geometry"]["location"]["lat"] %>, <%= @place["geometry"]["location"]["lng"] %>]</h5>
+    <h5><b>座標：</b>[<%= @place["lat"] %>, <%= @place["lng"] %>]</h5>
 
     <h5><b>分類：</b><%= @place["types"] %></h5>
 
-    <% if @place["formatted_phone_number"] %>
-      <h5><b>電話：</b><%= @place["formatted_phone_number"] %></h5>
+    <% if @place["phone"] %>
+      <h5><b>電話：</b><%= @place["phone"] %></h5>
     <% end %>
 
     <% if @place["website"] %>
@@ -91,17 +90,17 @@
 
     <% if @place["opening_hours"] %>
       <h5><b>開放時間：</b>
-        <% if @place["opening_hours"]["open_now"] == "false" %>
+        <% if @place["open_now"] == "false" %>
           <%= link_to "#openhour", :data => {:toggle=>"collapse"} do %>
-            今日已休息 <%= @place["opening_hours"]["weekday_text"][Date.today.wday-1] %>
+            今日已休息 <%= @place["opening_hours"][Date.today.wday-1] %>
           <% end %>
         <% else %>
           <%= link_to "#openhour", :data => {:toggle=>"collapse"} do %>
-            今日正常營業 <%= @place["opening_hours"]["weekday_text"][Date.today.wday-1] %>
+            今日正常營業 <%= @place["opening_hours"][Date.today.wday-1] %>
           <% end %>
         <% end %>   
         <div class="collapse" id="openhour" style="padding-left: 80px;">
-          <% @place["opening_hours"]["weekday_text"].each do |w| %>
+          <% @place["opening_hours"].each do |w| %>
             <h5><%= w %><br></h5>
           <% end %>
         </div>  
@@ -110,12 +109,12 @@
 
     <br><br>
 
-    <iframe src = <%= @place["url"] + "&output=embed" %> frameborder='0' style='border:0' width='600' height='300' allowfullscreen></iframe>
+    <iframe src = <%= @place["google_map_url"] + "&output=embed" %> frameborder='0' style='border:0' width='600' height='300' allowfullscreen></iframe>
     <br><br><br>
 
     <% if @place["reviews"] %>
       <h4 style="padding-bottom: 10px;">
-        <%= link_to @place["user_ratings_total"].to_s + " 則 Google 評論", @place["url"], target: "_blank" %> 
+        <%= link_to @place["user_ratings_total"].to_s + "x 則 Google 評論 ( 2016.May Google API移除顯示 )", @place["url"], target: "_blank" %> 
       </h4>
       <table class="table table-hover table-condensed table-borderless">
         <thead>

@@ -1,0 +1,86 @@
+<div class="index-container">
+  <br>
+  <h1>JSON範例</h1>
+  <br> 
+  <div>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs">
+      <li class="active"> <%= link_to "修改紀錄",         "#tab1", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
+      <li>                <%= link_to "關鍵字搜尋地點",    "#tab2", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
+      <li>                <%= link_to "PID搜尋地點",      "#tab3", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li> 
+      <li>                <%= link_to "搜尋PID",         "#tab4", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
+      <li>                <%= link_to "搜尋地點詳情",     "#tab5", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
+    </ul>
+  
+    <!-- Tab panes -->
+    <div class="tab-content">
+      <div class="tab-pane active" id="tab1">
+        <br><br>
+        <div class="well">
+          <%= render "history" %>
+        </div>          
+      </div>         
+      <div class="tab-pane" id="tab2">
+        <br><br>
+        <div class="well">
+          <h4>搜尋 "台北市" "景點" </h4>
+          <h5>
+            <%= link_to ENV["api_search_by_keyword_url"] + "?str=台北市&opt=景點", 
+                        ENV["api_search_by_keyword_url"] + "?str=台北市&opt=景點", :target => "_blank" %>
+          </h5>
+          <br>                    
+          <h4>搜尋 "台北市" "餐廳" </h4>
+          <h5>
+            <%= link_to ENV["api_search_by_keyword_url"] + "?str=台北市&opt=餐廳", 
+                        ENV["api_search_by_keyword_url"] + "?str=台北市&opt=餐廳", :target => "_blank" %>
+          </h5>
+          <br>
+          <h4>搜尋 "台北市" "購物" </h4>
+          <h5>
+            <%= link_to ENV["api_search_by_keyword_url"] + "?str=台北市&opt=購物", 
+                        ENV["api_search_by_keyword_url"] + "?str=台北市&opt=購物", :target => "_blank" %>
+          </h5>                            
+        </div>          
+      </div>        
+      <div class="tab-pane" id="tab3">
+        <br><br>
+        <div class="well">
+          <h4>搜尋 "中正紀念堂" "附近景點" ( Place ID從『搜尋PID』得到 )</h4>
+          <h5>
+            <%= link_to ENV["api_search_by_pid_url"] + "?pid=ChIJTamiuZ2pQjQRsmnfkkID6UM&opt=景點", 
+                        ENV["api_search_by_pid_url"] + "?pid=ChIJTamiuZ2pQjQRsmnfkkID6UM&opt=景點",  :target => "_blank" %>
+          </h5>
+          <br>
+          <h4>搜尋 "中正紀念堂" "附近餐廳" ( Place ID從『搜尋PID』得到 )</h4>
+          <h5>
+            <%= link_to ENV["api_search_by_pid_url"] + "?pid=ChIJTamiuZ2pQjQRsmnfkkID6UM&opt=餐廳", 
+                        ENV["api_search_by_pid_url"] + "?pid=ChIJTamiuZ2pQjQRsmnfkkID6UM&opt=餐廳",  :target => "_blank" %>
+          </h5>
+          <br>
+          <h4>搜尋 "中正紀念堂" "附近購物" ( Place ID從『搜尋PID』得到 )</h4>
+          <h5>
+            <%= link_to ENV["api_search_by_pid_url"] + "?pid=ChIJTamiuZ2pQjQRsmnfkkID6UM&opt=購物", 
+                        ENV["api_search_by_pid_url"] + "?pid=ChIJTamiuZ2pQjQRsmnfkkID6UM&opt=購物",  :target => "_blank" %>
+          </h5>                            
+        </div>           
+      </div>           
+      <div class="tab-pane" id="tab4">
+        <br><br>
+        <div class="well">
+          <h4>搜尋 "台北市" Place ID </h4>
+          <h5><%= link_to ENV["api_get_pid_url"] + "?str=台北市", 
+                          ENV["api_get_pid_url"] + "?str=台北市",  :target => "_blank" %></h5>                        
+        </div>          
+      </div>
+      <div class="tab-pane" id="tab5">
+        <br><br>
+        <div class="well">
+          <h4>搜尋 "通堂拉麵" 地點詳情 ( Place ID從『搜尋PID』得到 ) </h4>
+          <h5><%= link_to ENV["api_get_detail_url"] + "?pid=ChIJGaKzQLFp5TQRTpMN05kfffQ", 
+                          ENV["api_get_detail_url"] + "?pid=ChIJGaKzQLFp5TQRTpMN05kfffQ",  :target => "_blank" %></h5>                        
+        </div>      
+      </div>                     
+    </div>
+  </div>
+  <br><br><br>
+</div>

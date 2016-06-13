@@ -1,10 +1,10 @@
 <div class="jumbotron">
   <div class="index-container">
     <h2 style="margin-top: 0">
-      返回景點 <%= link_to params[:search_string], detail_path(place_id: params[:place_id], 
-                                                             search_string: params[:ori_string],
-                                                             search_option: params[:ori_option],
-                                                             redirect: params["redirect"]) %>  
+      返回景點 <%= link_to params[:str], detail_path(pid: params[:pid], 
+                                                    str: params[:ori_str],
+                                                    opt: params[:ori_opt],
+                                                    redirect: params[:redirect]) %>  
     </h2>
   </div>
 </div>
@@ -12,82 +12,32 @@
 
 <div class="index-container">
   <div class="well">
-    <h3 style="margin: 0"><%= params[:search_string] %>
-      附近<%= params[:search_option] %>搜尋結果.... ( <%= link_to "隱藏地圖", "#", :id => "click", :onclick => "toggle_visibility('map', 'click');" %> )
+    <h3 style="margin: 0"><%= params[:str] %>
+      附近<%= params[:opt] %>搜尋結果.... ( <%= link_to "隱藏地圖", "#", :id => "click", :onclick => "toggle_visibility('map', 'click');" %> )
     </h3>
   </div> 
 
   <div id="map" style="width: 100%; height: 400px; display: block"></div><br>  
 
   <div>
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs">
-      <li class="active">
-        <a href="#attraction" data-toggle="tab"><h4>附近<%= params[:search_option] %></h4></a>
-      </li>
-    </ul>
-  
-    <!-- Tab panes -->
-    <div class="tab-content">
-      <div  class="tab-pane active" id="attraction">
-        <% @response.each_with_index do |location, i| %> 
-          <% if location["photos"] %>
-            <% photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
-                           location["photos"][0]["photo_reference"] + 
-                           "&key=#{ENV["google_api_key"]}" %>      
-          <% end %>
-          <div class="media">
-            <div class="media-left" style="padding-right: 80px;">
-              <%= link_to "#" do %>
-                <div style="width: 200px; height: 200px;">
-                  <% if location["photos"] %>
-                    <%= image_tag(photo_url, class: 'media-object', style:"width: 85%; height: 85%; border-radius: 50%;") %>                
-                  <% else %>
-                    <%= image_tag("black.jpg", class: 'media-object', style:"width: 85%; height: 85%; border-radius: 50%;") %>
-                  <% end %>
-                </div>
-
-              <% end %>
-            </div>
-            <div class="media-body" style="vertical-align: middle;">
-              <h3 class="media-heading">
-                <%= link_to location["name"], near_by_detail_path(place_id: location["place_id"], 
-                                                          search_string: params[:search_string] ? params[:search_string] : "",
-                                                          search_option: params[:search_option] ? params[:search_option] : "",
-                                                          redirect: true) %>
-              </h3>
-              <% if location["rating"] %>
-                <h4>
-                  <b>景點評分：</b><span style="color: #e7711b;"><%= location["rating"] %>&nbsp</span>
-                  <% location["rating"].floor.times do %>
-                    <span class="glyphicon glyphicon-star" style="top: 3px; color: #e7711b;"></span>
-                  <% end %>
-                  <% (5-location["rating"].floor).times do %>
-                    <span class="glyphicon glyphicon-star-empty" style="top: 3px; color: #e7711b;"></span>
-                  <% end %>
-                </h4>
-              <% end %>
-              <h4><b>景點分類：</b><%= location["types"] %></h4>
-              <h4><b>景點距離：</b><%= @distance[i]["distance"]["text"] %>, 步行 <%= @distance[i]["duration"]["text"] %>鐘</h4>
-            </div>
-          </div>           
-        <% end %>          
-      </div>
-    </div>
+    <%= render "place_list", nearby: true %>      
   </div>
   <br><br><br><br>
 </div>   
 
 
 <script type="text/javascript">
-  <% if @response  %>
-    <% location_array = @response.map {|r| [r["name"], r["geometry"]["location"]["lat"], r["geometry"]["location"]["lng"], r["rating"] ? r["rating"].to_s : "N/A"]} %>
+  <% if @places  %>
+    <% location_array = @places["results"].map {|r| [r["name"], 
+                                                    r["lat"], 
+                                                    r["lng"], 
+                                                    r["rating"] ? r["rating"].to_s : "N/A"]} %>    
   
     var locations = <%= raw location_array %>;
 
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 14,
-      center: new google.maps.LatLng(<%= @coordinate["lat"] %>, <%= @coordinate["lng"] %>),
+      center: new google.maps.LatLng(<%= @places["auto_complete_lat"] %>, <%= @places["auto_complete_lng"] %>),
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
@@ -111,7 +61,7 @@
     }
 
     marker = new google.maps.Marker({
-      position: new google.maps.LatLng(<%= @coordinate["lat"] %>, <%= @coordinate["lng"] %>),
+      position: new google.maps.LatLng(<%= @places["auto_complete_lat"] %>, <%= @places["auto_complete_lng"] %>),
       map: map,
       icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
     });

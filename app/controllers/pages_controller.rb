@@ -1,5 +1,4 @@
 class PagesController < ApplicationController
-  before_action :get_api_count
   require 'net/http'
   require 'json'
 
@@ -10,6 +9,7 @@ class PagesController < ApplicationController
       encoded_url = URI.encode(wow_search_keyword_url)
       uri = URI.parse(encoded_url)
       @places = JSON.parse(Net::HTTP.get(uri))      
+      get_api_count
     end  
     
   end
@@ -19,7 +19,7 @@ class PagesController < ApplicationController
     encoded_url = URI.encode(wow_detail_url)
     uri = URI.parse(encoded_url)
     @place = JSON.parse(Net::HTTP.get(uri))      
-
+    get_api_count
   end
 
   def near_by
@@ -27,6 +27,7 @@ class PagesController < ApplicationController
     encoded_url = URI.encode(wow_search_pid_url)
     uri = URI.parse(encoded_url)
     @places = JSON.parse(Net::HTTP.get(uri))      
+    get_api_count
   end
 
   private

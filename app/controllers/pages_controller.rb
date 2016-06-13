@@ -10,6 +10,8 @@ class PagesController < ApplicationController
       uri = URI.parse(encoded_url)
       @places = JSON.parse(Net::HTTP.get(uri))      
       get_api_count
+    else  
+      get_api_count
     end  
     
   end

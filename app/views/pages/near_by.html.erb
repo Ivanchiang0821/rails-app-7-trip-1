@@ -1,10 +1,10 @@
 <div class="jumbotron">
   <div class="index-container">
     <h2 style="margin-top: 0">
-      返回景點 <%= link_to params[:str], detail_path(pid: params[:pid], 
-                                                    str: params[:ori_str],
-                                                    opt: params[:ori_opt],
-                                                    redirect: params[:redirect]) %>  
+      返回景點 <%= link_to @auto_complete_str, detail_path(pid: @pid, 
+                                                          str: @str,
+                                                          opt: @opt,
+                                                          redirect: @redirect) %>  
     </h2>
   </div>
 </div>
@@ -12,8 +12,18 @@
 
 <div class="index-container">
   <div class="well">
-    <h3 style="margin: 0"><%= params[:str] %>
+    <h3 style="margin: 0"><%= @auto_complete_str %>
       附近<%= params[:opt] %>搜尋結果.... ( <%= link_to "隱藏地圖", "#", :id => "click", :onclick => "toggle_visibility('map', 'click');" %> )
+      <% if @places["next_page_token"] %>
+        <%= link_to "下一頁", near_by_path(auto_complete_str: @auto_complete_str, 
+                                          auto_complete_lat: @auto_complete_lat, 
+                                          auto_complete_lng: @auto_complete_lng, 
+                                          pid: @pid, 
+                                          str: @str,
+                                          opt: @opt,
+                                          redirect: @redirect,
+                                          token: @places["next_page_token"]), class: "pull-right" %>
+      <% end %>      
     </h3>
   </div> 
 
@@ -27,7 +37,7 @@
 
 
 <script type="text/javascript">
-  <% if @places  %>
+  <% if @places %>
     <% location_array = @places["results"].map {|r| [r["name"], 
                                                     r["lat"], 
                                                     r["lng"], 
@@ -37,7 +47,7 @@
 
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 14,
-      center: new google.maps.LatLng(<%= @places["auto_complete_lat"] %>, <%= @places["auto_complete_lng"] %>),
+      center: new google.maps.LatLng(<%= @auto_complete_lat %>, <%= @auto_complete_lng %>),
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
@@ -61,7 +71,7 @@
     }
 
     marker = new google.maps.Marker({
-      position: new google.maps.LatLng(<%= @places["auto_complete_lat"] %>, <%= @places["auto_complete_lng"] %>),
+      position: new google.maps.LatLng(<%= @auto_complete_lat %>, <%= @auto_complete_lng %>),
       map: map,
       icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
     });

@@ -1,6 +1,5 @@
 <br>
 <% @places["results"].each do |r| %> 
-  Hello
   <% if r["photo_ref"] %>
     <% photo_url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=" +
                    r["photo_ref"] + 
@@ -10,7 +9,7 @@
   <div class="media">
     <div class="media-left" style="padding-right: 80px;">
       <%= link_to "#" do %>
-        <div style="width: 200px; height: 200px;">
+        <div style="width: 100px; height: 100px;">
           <% if r["photo_ref"] %>
             <%= image_tag(photo_url, class: 'media-object', style:"width: 85%; height: 85%; border-radius: 50%;") %>
           <% else %>
@@ -20,8 +19,8 @@
 
       <% end %>
     </div>
-    <div class="media-body" style="vertical-align: middle;">
-      <h3 class="media-heading">
+    <div class="media-body" style="padding-top: 10px;">
+      <h3 class="media-heading" style="font-size: 22px;  margin-top: 0px;">
         <% link_path = detail_path(pid: r["pid"], 
                                    str: params[:str] ? params[:str] : "",
                                    opt: params[:opt] ? params[:opt] : "",
@@ -30,7 +29,7 @@
         <%= link_to r["name"], link_path %>
       </h3>
       <% if r["rating"] %>
-        <h4>
+        <h4 style="font-size: 16px; margin: 0px;">
           <b>景點評分：</b><span style="color: #e7711b;"><%= r["rating"] %>&nbsp</span>
           <% r["rating"].floor.times do %>
             <span class="glyphicon glyphicon-star" style="top: 3px; color: #e7711b;"></span>
@@ -40,9 +39,9 @@
           <% end %>
         </h4>
       <% end %>
-      <h4><b>景點分類：</b><%= r["types"] %></h4>
+      <h4 style="font-size: 16px; margin: 0px;"><b>景點分類：</b><%= r["types"] %></h4>
       <% if nearby %>
-        <h4><b>景點距離：</b><%= r["distance"] %>, 步行 <%= r["duration"] %>鐘</h4>
+        <h4 style="font-size: 16px; margin: 0px;"><b>景點距離：</b><%= r["distance"] %>, 步行 <%= r["duration"] %>鐘</h4>
       <% end %>
     </div>            
   </div>            

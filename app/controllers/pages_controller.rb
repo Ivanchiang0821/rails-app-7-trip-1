@@ -4,11 +4,23 @@ class PagesController < ApplicationController
 
   def index
     
-    if params[:str]
+    if params[:token]
+      wow_get_next_page_url = ENV["api_get_next_page_url"] + "?token=#{params[:token]}"
+      encoded_url = URI.encode(wow_get_next_page_url)
+      uri = URI.parse(encoded_url)
+      @places = JSON.parse(Net::HTTP.get(uri))      
+      @auto_complete_str = params[:auto_complete_str]
+      @auto_complete_lat = params[:auto_complete_lat]
+      @auto_complete_lng = params[:auto_complete_lng]  
+      get_api_count      
+    elsif params[:str]
       wow_search_keyword_url = ENV["api_search_by_keyword_url"] + "?str=#{params[:str]}&opt=#{params[:opt]}"
       encoded_url = URI.encode(wow_search_keyword_url)
       uri = URI.parse(encoded_url)
       @places = JSON.parse(Net::HTTP.get(uri))      
+      @auto_complete_str = @places["auto_complete_str"]
+      @auto_complete_lat = @places["auto_complete_lat"] 
+      @auto_complete_lng = @places["auto_complete_lng"] 
       get_api_count
     else  
       get_api_count

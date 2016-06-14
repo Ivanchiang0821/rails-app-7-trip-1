@@ -23,11 +23,17 @@
   </div>
 </div>
 
-<% if params[:str] and @places %>
+<% if (params[:str] or params[:token]) and @places %>
   <div class="index-container">
     <div class="well">
-      <h3 style="margin: 0"><%= @places["auto_complete_str"] %>
+      <h3 style="margin: 0"><%= @auto_complete_str %>
         搜尋<%= params[:opt] %>結果.... ( <%= link_to "隱藏地圖", "#", :id => "click", :onclick => "toggle_visibility('map', 'click');" %> )
+        <% if @places["next_page_token"] %>
+          <%= link_to "下一頁", index_path(auto_complete_str: @auto_complete_str, 
+                                          auto_complete_lat: @auto_complete_lat, 
+                                          auto_complete_lng: @auto_complete_lng, 
+                                          token: @places["next_page_token"]), class: "pull-right" %>
+        <% end %>
       </h3>
     </div> 
     
@@ -55,7 +61,7 @@
 
     var map = new google.maps.Map(document.getElementById('map'), {
       zoom: 14,
-      center: new google.maps.LatLng(<%= @places["auto_complete_lat"] %>, <%= @places["auto_complete_lng"] %>),
+      center: new google.maps.LatLng(<%= @auto_complete_lat %>, <%= @auto_complete_lng %>),
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
@@ -79,7 +85,7 @@
     }
 
     marker = new google.maps.Marker({
-      position: new google.maps.LatLng(<%= @places["auto_complete_lat"] %>, <%= @places["auto_complete_lng"] %>),
+      position: new google.maps.LatLng(<%= @auto_complete_lat %>, <%= @auto_complete_lng %>),
       map: map,
       icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
     });

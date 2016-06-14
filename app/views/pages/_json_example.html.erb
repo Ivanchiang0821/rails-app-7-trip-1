@@ -10,6 +10,7 @@
       <li>                <%= link_to "PID搜尋地點",      "#tab3", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li> 
       <li>                <%= link_to "搜尋PID",         "#tab4", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
       <li>                <%= link_to "搜尋地點詳情",     "#tab5", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>
+      <li>                <%= link_to "搜尋下一頁",       "#tab6", :data => {toggle: "tab"}, style:"font-size: 1.4em" %> </li>      
     </ul>
   
     <!-- Tab panes -->
@@ -79,7 +80,22 @@
           <h5><%= link_to ENV["api_get_detail_url"] + "?pid=ChIJGaKzQLFp5TQRTpMN05kfffQ", 
                           ENV["api_get_detail_url"] + "?pid=ChIJGaKzQLFp5TQRTpMN05kfffQ",  :target => "_blank" %></h5>                        
         </div>      
-      </div>                     
+      </div> 
+      <div class="tab-pane" id="tab6">
+        <br><br>
+        <div class="well">
+          <h4>Example:</h4>
+          <h5>1. 用
+            <%= link_to ENV["api_search_by_keyword_url"] + "?str=台北市&opt=景點", 
+                        ENV["api_search_by_keyword_url"] + "?str=台北市&opt=景點", :target => "_blank" %><br>
+            &nbsp&nbsp&nbsp&nbsp得到next_page_token為CqQDnQEAAFzb5.....
+          </h5>
+          <br>
+          <h5>2. 代入Get Next Page API得到下一頁結果<br>&nbsp&nbsp&nbsp&nbsp
+          <%= link_to ENV["api_get_next_page_url"] + "?token=CoQC_QAAAALufjgUSjwNeyiSDwxkv-T62gS6YtWfAIwZ-Xw3YsSD53c4WhRtUEfKUlliJz_loKFktIDSCZ_2QHix7RSVYh0eKPPY6KIq1fdVulW-2AjlAoO-IlnGpTSamf9X6KybLlG-ZIpChwdSpTTqxfhAvIoa2s9sbBcFaVO-P48TZaXwrlgGgo4t7n5YNsc1LfWFFjeKwEOdmodDJWSEteZs8yYs2HFVSLVeIn1CrtUtcxe-K6CXcCtFt6FRVghdlmIggyRGiyaUnqCGhGT2dnN4gBQLJMo4-kqC08c90QG2CMvUF99L5uurlsJBzylx8e8eKDKEyYpYCTyFlzzH8usBYoISEHfgFZoOPMI2NZ7MCvyGKXQaFFGIlnDewgk9uLVx4Up1sLaew-sm", 
+                          ENV["api_get_next_page_url"] + "?token=CoQC_QAAAALufjgUSjwNeyiSDwxkv-T62gS6YtWfAIwZ-Xw3YsSD53c4WhRtUEfKUlliJz_loKFktIDSCZ_2QHix7RSVYh0eKPPY6KIq1fdVulW-2AjlAoO-IlnGpTSamf9X6KybLlG-ZIpChwdSpTTqxfhAvIoa2s9sbBcFaVO-P48TZaXwrlgGgo4t7n5YNsc1LfWFFjeKwEOdmodDJWSEteZs8yYs2HFVSLVeIn1CrtUtcxe-K6CXcCtFt6FRVghdlmIggyRGiyaUnqCGhGT2dnN4gBQLJMo4-kqC08c90QG2CMvUF99L5uurlsJBzylx8e8eKDKEyYpYCTyFlzzH8usBYoISEHfgFZoOPMI2NZ7MCvyGKXQaFFGIlnDewgk9uLVx4Up1sLaew-sm",  :target => "_blank" %></h5>                        
+        </div>      
+      </div>                             
     </div>
   </div>
   <br><br><br>

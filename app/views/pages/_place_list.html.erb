@@ -19,8 +19,9 @@
 
       <% end %>
     </div>
-    <div class="media-body" style="padding-top: 10px;">
-      <h3 class="media-heading" style="font-size: 22px;  margin-top: 0px;">
+    <% nearby_margin_top = nearby ? "0px" : "7px" %> 
+    <div class="media-body" style="padding-top: 0px;">
+      <h3 class="media-heading" style="font-size: 20px;  margin-top: <%= nearby_margin_top %>;">
         <% link_path = detail_path(pid: r["pid"], 
                                    str: params[:str] ? params[:str] : "",
                                    opt: params[:opt] ? params[:opt] : "",
@@ -29,7 +30,7 @@
         <%= link_to r["name"], link_path %>
       </h3>
       <% if r["rating"] %>
-        <h4 style="font-size: 16px; margin: 0px;">
+        <h4 style="font-size: 14px; margin: 0px;">
           <b>景點評分：</b><span style="color: #e7711b;"><%= r["rating"] %>&nbsp</span>
           <% r["rating"].floor.times do %>
             <span class="glyphicon glyphicon-star" style="top: 3px; color: #e7711b;"></span>
@@ -39,9 +40,9 @@
           <% end %>
         </h4>
       <% end %>
-      <h4 style="font-size: 16px; margin: 0px;"><b>景點分類：</b><%= r["types"] %></h4>
+      <h4 style="font-size: 14px; margin: 0px;"><b>景點分類：</b><%= r["types"] %></h4>
       <% if nearby %>
-        <h4 style="font-size: 16px; margin: 0px;"><b>景點距離：</b><%= r["distance"] %>, 步行 <%= r["duration"] %>鐘</h4>
+        <h4 style="font-size: 14px; margin: 0px;"><b>景點距離：</b><%= r["distance"] %>, 步行 <%= r["duration"] %>鐘</h4>
       <% end %>
     </div>            
   </div>            

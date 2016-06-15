@@ -28,11 +28,14 @@
     <div class="well">
       <h3 style="margin: 0"><%= @auto_complete_str %>
         搜尋<%= params[:opt] %>結果.... ( <%= link_to "隱藏地圖", "#", :id => "click", :onclick => "toggle_visibility('map', 'click');" %> )
+        <% if @places["max_distance"] %>
+          <span style="font-size: 12px; padding-left: 15px;">最遠兩點為: <%= @places["max_distance_description"] %> <%= (@places["max_distance"]/1000.0).round(1) %>公里</span>
+        <% end %>        
         <% if @places["next_page_token"] %>
           <%= link_to "下一頁", index_path(auto_complete_str: @auto_complete_str, 
                                           auto_complete_lat: @auto_complete_lat, 
                                           auto_complete_lng: @auto_complete_lng, 
-                                          token: @places["next_page_token"]), class: "pull-right" %>
+                                          token: @places["next_page_token"]), class: "pull-right", style:"font-size: 20px" %>
         <% end %>
       </h3>
     </div> 
@@ -64,6 +67,15 @@
       center: new google.maps.LatLng(<%= @auto_complete_lat %>, <%= @auto_complete_lng %>),
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
+
+    <% if @places["max_distance"] && @places["max_distance"] > 0 %>
+      var bound_0 = new google.maps.LatLng(<%= @places["max_distance_origin_cor"][0] %>, <%= @places["max_distance_origin_cor"][1] %>);
+      var bound_1 = new google.maps.LatLng(<%= @places["max_distance_destination_cor"][0] %>, <%= @places["max_distance_destination_cor"][1] %>);
+      var bounds = new google.maps.LatLngBounds();
+      bounds.extend(bound_0);
+      bounds.extend(bound_1);
+      map.fitBounds(bounds);
+    <% end %>
 
     var infowindow = new google.maps.InfoWindow();
 

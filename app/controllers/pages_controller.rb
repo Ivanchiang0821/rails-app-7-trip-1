@@ -73,5 +73,5 @@ class PagesController < ApplicationController
     uri = URI.parse(encoded_url)
     @api_count = JSON.parse(Net::HTTP.get(uri))    
   end
- 
+
 end

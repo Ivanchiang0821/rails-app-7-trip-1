@@ -68,7 +68,7 @@
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
 
-    <% if @places["max_distance"] && @places["max_distance"] > 0 %>
+    <% if @places["max_distance_origin_cor"] %>
       var bound_0 = new google.maps.LatLng(<%= @places["max_distance_origin_cor"][0] %>, <%= @places["max_distance_origin_cor"][1] %>);
       var bound_1 = new google.maps.LatLng(<%= @places["max_distance_destination_cor"][0] %>, <%= @places["max_distance_destination_cor"][1] %>);
       var bounds = new google.maps.LatLngBounds();

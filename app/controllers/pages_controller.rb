@@ -5,7 +5,7 @@ class PagesController < ApplicationController
   def index
     
     if params[:token]
-      wow_get_next_page_url = ENV["api_get_next_page_url"] + "?token=#{params[:token]}"
+      wow_get_next_page_url = ENV["api_get_next_page_keyword_url"] + "?token=#{params[:token]}"
       encoded_url = URI.encode(wow_get_next_page_url)
       uri = URI.parse(encoded_url)
       @places = JSON.parse(Net::HTTP.get(uri))      
@@ -38,7 +38,7 @@ class PagesController < ApplicationController
 
   def near_by
     if params[:token]
-      wow_get_next_page_url = ENV["api_get_next_page_url"] + "?token=#{params[:token]}"
+      wow_get_next_page_url = ENV["api_get_next_page_nearby_url"] + "?token=#{params[:token]}"
       encoded_url = URI.encode(wow_get_next_page_url)
       uri = URI.parse(encoded_url)
       @places = JSON.parse(Net::HTTP.get(uri))      

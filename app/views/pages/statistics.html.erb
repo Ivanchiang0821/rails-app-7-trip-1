@@ -64,7 +64,11 @@
 				<tbody>
 					<% @statistics["keyword_count"].each do |k| %>	  
 						<tr>
-							<td><span class="label label-default" style="font-size: 1.1em"><%= k["keyword"] %></td>
+							<td>
+								<span class="label label-default" style="font-size: 1.1em">
+									<%= link_to k["keyword"], keyword_path(str: k["keyword"], opt: k["option"]), style: "color: white", :target => "_blank" %>
+								</span>
+							</td>
 							<td><%= k["option"] %></td>
 							<td><%= k["count"] %></td>
 							<td><%= k["autocomplete"] ? "是" : "否" %></td>

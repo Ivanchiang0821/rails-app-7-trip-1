@@ -55,10 +55,11 @@
 			<table class="table table-hover table-borderless" id="stat">
 				<thead>
 					<tr>
-						<th width="70%">關鍵字</th>
+						<th width="45%">關鍵字</th>
 						<th width="10%">類別</th>
 						<th width="10%">次數</th>
-						<th width="10%">AutoComplete</th>
+						<th width="10%">自動完成</th>
+						<th width="25%">最後更新</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -72,6 +73,7 @@
 							<td><%= k["option"] %></td>
 							<td><%= k["count"] %></td>
 							<td><%= k["autocomplete"] ? "是" : "否" %></td>
+							<td><%= Time.parse(k["updated_at"]).in_time_zone('Taipei').strftime("%F %H:%M") %></td>
 						</tr>
 					<% end %>																																						
 				</tbody>

@@ -51,7 +51,7 @@ class PagesController < ApplicationController
     uri = URI.parse(encoded_url)
     @statistics = JSON.parse(Net::HTTP.get(uri))    
 
-    @statistics["keyword_count"].sort_by! { |k| -k["count"] }
+    @statistics["keyword_count"].sort_by! { |k| -k["count"] }    
   end
 
 end

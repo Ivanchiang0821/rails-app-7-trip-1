@@ -56,14 +56,16 @@
 				<thead>
 					<tr>
 						<th width="70%">關鍵字</th>
-						<th width="15%">次數</th>
-						<th width="15%">AutoComplete</th>
+						<th width="10%">類別</th>
+						<th width="10%">次數</th>
+						<th width="10%">AutoComplete</th>
 					</tr>
 				</thead>
 				<tbody>
 					<% @statistics["keyword_count"].each do |k| %>	  
 						<tr>
 							<td><span class="label label-default" style="font-size: 1.1em"><%= k["keyword"] %></td>
+							<td><%= k["option"] %></td>
 							<td><%= k["count"] %></td>
 							<td><%= k["autocomplete"] ? "是" : "否" %></td>
 						</tr>

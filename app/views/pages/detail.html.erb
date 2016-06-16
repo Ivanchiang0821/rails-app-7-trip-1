@@ -3,11 +3,33 @@
   <div class="well" id="detail-well">
     <h1>
       <%= @place["name"] %>
-      <% if params[:redirect] == "true" %>
-        <%= link_to "返回", index_path(str: params[:str], opt: params[:opt]), class:"pull-right", style:"font-size: 0.7em" %>
-      <% else %>
-        <%= link_to "返回", index_path, class:"pull-right", style:"font-size: 0.7em" %>      
-      <% end %>
+      <span id="detail-label">
+        <span class="label label-default">
+          <%= link_to "附近景點", nearby_path(pid: @place["pid"], 
+                                             str: params[:str], 
+                                             opt: params[:opt], 
+                                             new_str: @place["name"], 
+                                             new_opt: "景點"), 
+                                             style: "color: white;" %>
+        </span>
+        <span class="label label-default">
+          <%= link_to "附近餐廳", nearby_path(pid: @place["pid"], 
+                                             str: params[:str], 
+                                             opt: params[:opt], 
+                                             new_str: @place["name"], 
+                                             new_opt: "餐廳"), 
+                                             style: "color: white;" %>
+        </span>
+        <span class="label label-default">
+          <%= link_to "附近購物", nearby_path(pid: @place["pid"], 
+                                             str: params[:str], 
+                                             opt: params[:opt], 
+                                             new_str: @place["name"], 
+                                             new_opt: "購物"), 
+                                             style: "color: white;" %>
+        </span>    
+      </span>        
+      <%= link_to "返回", keyword_path(str: params[:str], opt: params[:opt]), class:"pull-right", style:"font-size: 0.7em" %>
     </h1>
     
     <h4 style="color: #e7711b;">
@@ -20,36 +42,7 @@
           <span class="glyphicon glyphicon-star-empty" style="top: 3px"></span>
         <% end %>
         &nbsp&nbsp&nbsp&nbsp
-      <% end %>
-      <div id="detail-label">
-        <span class="label label-default" style="font-size: 0.3em;">
-          <%= link_to "附近景點", near_by_path(pid: @place["pid"], 
-                                              ori_str: params[:str], 
-                                              ori_opt: params[:opt], 
-                                              str: @place["name"], 
-                                              opt: "景點", 
-                                              redirect: params[:redirect]), 
-                                              style: "color: white;" %>
-        </span>
-        <span class="label label-default" style="font-size: 0.3em;">
-          <%= link_to "附近餐廳", near_by_path(pid: @place["pid"], 
-                                              ori_str: params[:str], 
-                                              ori_opt: params[:opt], 
-                                              str: @place["name"], 
-                                              opt: "餐廳", 
-                                              redirect: params[:redirect]), 
-                                              style: "color: white;" %>
-        </span>
-        <span class="label label-default" style="font-size: 0.3em;">
-          <%= link_to "附近購物", near_by_path(pid: @place["pid"], 
-                                              ori_str: params[:str], 
-                                              ori_opt: params[:opt], 
-                                              str: @place["name"], 
-                                              opt: "購物", 
-                                              redirect: params[:redirect]), 
-                                              style: "color: white;" %>
-        </span>    
-      </div>    
+      <% end %>  
     </h4>      
 
     <br>

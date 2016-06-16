@@ -1,0 +1,77 @@
+<div class="jumbotron">
+  <div class="index-container">
+    <h2 style="margin-top: 0">統計數據</h2>
+    <div class="row">
+      <div class="col-xs-9"> 
+      </div>  
+    </div>  
+  </div>
+</div>
+
+<div class="index-container">
+  <div class="row">
+    <div class="col-xs-9">
+    	<h3>Web API 執行次數</h3>
+			<table class="table table-hover table-borderless" id="stat">
+				<thead>
+					<tr>
+						<th width="85%">功能</th>
+						<th width="15%">次數</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>JSON關鍵字搜尋地點</td>
+						<td><%= @statistics["cnt_search_by_keyword"] %></td>
+					</tr>
+					<tr>
+						<td>JSON PID搜尋地點</td>
+						<td><%= @statistics["cnt_search_by_pid"] %></td>
+					</tr>
+					<tr>
+						<td>JSON座標搜尋地點</td>
+						<td><%= @statistics["cnt_search_by_coordinate"] %></td>
+					</tr>
+					<tr>
+						<td>JSON關鍵字下一頁</td>
+						<td><%= @statistics["cnt_get_next_page_keyword"] %></td>
+					</tr>
+					<tr>
+						<td>JSON PID下一頁</td>
+						<td><%= @statistics["cnt_get_next_page_pid"] %></td>
+					</tr>
+					<tr>
+						<td>JSON搜尋PID</td>
+						<td><%= @statistics["cnt_get_pid"] %></td>
+					</tr>
+					<tr>
+						<td>JSON地點詳情</td>
+						<td><%= @statistics["cnt_get_detail"] %></td>
+					</tr>																																										
+				</tbody>
+			</table>		
+			<br><br>
+			<h3>搜尋字串統計</h3>
+			<table class="table table-hover table-borderless" id="stat">
+				<thead>
+					<tr>
+						<th width="70%">關鍵字</th>
+						<th width="15%">次數</th>
+						<th width="15%">AutoComplete</th>
+					</tr>
+				</thead>
+				<tbody>
+					<% @statistics["keyword_count"].each do |k| %>	  
+						<tr>
+							<td><span class="label label-default" style="font-size: 1.1em"><%= k["keyword"] %></td>
+							<td><%= k["count"] %></td>
+							<td><%= k["autocomplete"] ? "是" : "否" %></td>
+						</tr>
+					<% end %>																																						
+				</tbody>
+			</table>
+
+    </div>  
+  </div>  
+</div>
+

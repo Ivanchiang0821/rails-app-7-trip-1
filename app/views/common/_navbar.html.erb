@@ -1,15 +1,14 @@
-<nav class="navbar navbar-default" role="navigation" style="margin: 0; background-color: #eeeeee; height: 80px; border: 0;">
-  <div class="container-fluid">
+<nav class="navbar navbar-default" style="margin: 0; padding: 30px; background-color: #eeeeee; height: 110px; border: 0;">
+  <div class="container-fluid" >
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
-      <%= link_to "幫旅(遊)", root_path, class: "navbar-brand", style: "font-size: 1.8em; font-weight: bold; padding-top: 30px; padding-left: 40px;" %>
+      <%= link_to "幫旅(遊)", root_path, class: "navbar-brand", style:"font-size: 1.8em;" %>
     </div>
-    <div class="pull-right" style="padding-right: 100px;">
-      <b>JSON關鍵字搜尋地點:</b> <%= @api_count["cnt0"] %>,&nbsp&nbsp
-      <b>JSON ID搜尋地點:</b> <%= @api_count["cnt1"] %>,&nbsp&nbsp
-      <b>JSON ID搜尋:</b> <%= @api_count["cnt2"] %>,&nbsp&nbsp
-      <b>JSON地點詳情:</b> <%= @api_count["cnt3"] %>,&nbsp&nbsp
-      <b>JSON下一頁:</b> <%= @api_count["cnt4"] %>
-    </div>
+    <div class="collapse navbar-collapse navbar-ex1-collapse"> 
+      <ul class="nav navbar-nav navbar-right">
+        <li><%= link_to "統計資料", statistics_path, style:"font-size: 1.3em;" %></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
   </div>
 </nav>
+

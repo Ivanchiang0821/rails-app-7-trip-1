@@ -1,0 +1,108 @@
+<div class="jumbotron">
+  <div class="index-container">
+    <h2 style="margin-top: 0">
+      <%= link_to "返回首頁", root_path %>  
+    </h2>
+  </div>
+</div>
+
+<div class="index-container">
+  <div class="well">
+    <h3 style="margin: 0"><%= params[:str] %>
+      <% if @places["auto_complete_str"] && @places["auto_complete_str"] != "" %>
+        (<%= @places["auto_complete_str"] %>)
+      <% end %>
+      搜尋 <%= params[:opt] %> 結果.... ( <%= link_to "隱藏地圖", "#", :id => "click", :onclick => "toggle_visibility('map', 'click');" %> )     
+      <% if @places["next_page_token"] %>
+        <%= link_to "下一頁", keyword_path(str: params[:str], 
+                                          opt: params[:opt], 
+                                          token: @places["next_page_token"]), class: "pull-right", style:"font-size: 20px" %>
+      <% end %>
+    </h3>
+  </div> 
+  
+  
+
+  <div>
+    <% if @places["results"].count > 0 %>
+      <div id="map" style="width: 100%; height: 400px; display: block"></div><br>  
+      <%= render "place_list", nearby: false %> 
+    <% else %>
+      <br>
+      <h3>....0筆搜尋結果....</h3>
+    <% end %>
+  </div>
+  <br><br><br><br>
+</div>   
+
+<script type="text/javascript">
+  <% if @places  %>
+    <% location_array = @places["results"].map {|r| [r["name"], 
+                                                    r["lat"], 
+                                                    r["lng"], 
+                                                    r["rating"] ? r["rating"].to_s : "N/A"]} %>
+  
+    var locations = <%= raw location_array %>;
+
+    var map = new google.maps.Map(document.getElementById('map'), {
+      //zoom: 14,
+      //center: new google.maps.LatLng(<%= @auto_complete_lat %>, <%= @auto_complete_lng %>),
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+
+    var infowindow = new google.maps.InfoWindow();
+
+    var marker, i;
+    var bounds = new google.maps.LatLngBounds();
+
+    for (i = 0; i < locations.length; i++) {  
+      var bound = new google.maps.LatLng(locations[i][1], locations[i][2]);
+      bounds.extend(bound);
+
+      marker = new google.maps.Marker({
+        position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+        map: map,
+        icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+      });
+
+      google.maps.event.addListener(marker, 'click', (function(marker, i) {
+        return function() {
+          infowindow.setContent("<h5><b>"+locations[i][0]+"</b></h5>"+"景點評分: "+locations[i][3]);
+          infowindow.open(map, marker);
+        }
+      })(marker, i));
+    }
+    map.fitBounds(bounds);
+
+    // marker = new google.maps.Marker({
+    //   position: new google.maps.LatLng(<%= @auto_complete_lat %>, <%= @auto_complete_lng %>),
+    //   map: map,
+    //   icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+    // });
+
+    google.maps.event.addListener(marker, 'click', (function(marker, i) {
+      return function() {
+        infowindow.setContent("<h5><b>搜尋點" + "</b></h5>");
+        infowindow.open(map, marker);
+      }
+    })(marker, i));    
+
+  <% end %>      
+</script>
+
+<script>
+  function toggle_visibility(id1, id2) {
+     var e1 = document.getElementById(id1);
+     if(e1.style.display == 'block')
+        e1.style.display = 'none';
+     else
+        e1.style.display = 'block';
+
+     var e2= document.getElementById(id2);
+     if(e2.text == '顯示地圖')
+        e2.text = '隱藏地圖';
+     else
+        e2.text = '顯示地圖';      
+  }
+</script>

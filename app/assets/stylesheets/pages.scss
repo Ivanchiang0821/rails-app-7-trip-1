@@ -9,6 +9,26 @@ table.table-borderless tbody tr td {
   vertical-align: middle;
 }
 
+table#stat thead tr th {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+table#stat thead tr th:nth-child(2) {
+  text-align: center;
+}
+
+table#stat tbody tr td:nth-child(2) {
+  text-align: center;
+}
+table#stat thead tr th:nth-child(3) {
+  text-align: center;
+}
+
+table#stat tbody tr td:nth-child(3) {
+  text-align: center;
+}
+
 #detail-well h5 {
   font-size: 1.1em;
   font-weight: 300;
@@ -31,12 +51,14 @@ div.media-body h4 {
 }
 
 #detail-label {
-  display: inline-block;
-  vertical-align: top;
+  margin-left: 50px;
+  position: relative;
+  top: -6px;
 }
 
 #detail-label span{
-  margin-right: 5px;
+  margin-left: 10px;
+  font-size: 0.45em;
 }
 
 #detail-label span a:hover{

@@ -1,10 +1,9 @@
 <div class="jumbotron">
   <div class="index-container">
     <h2 style="margin-top: 0">
-      返回景點 <%= link_to @auto_complete_str, detail_path(pid: @pid, 
-                                                          str: @str,
-                                                          opt: @opt,
-                                                          redirect: @redirect) %>  
+      返回景點 <%= link_to params[:new_str], detail_path(pid: params[:pid], 
+                                                        str: params[:str],
+                                                        opt: params[:opt]) %>  
     </h2>
   </div>
 </div>
@@ -12,20 +11,15 @@
 
 <div class="index-container">
   <div class="well">
-    <h3 style="margin: 0"><%= @auto_complete_str %>
-      附近<%= params[:opt] %>搜尋結果.... ( <%= link_to "隱藏地圖", "#", :id => "click", :onclick => "toggle_visibility('map', 'click');" %> )
-      <% if @places["max_distance"] %>
-        <span style="font-size: 12px; padding-left: 15px;">最遠兩點為: <%= @places["max_distance_description"] %> <%= (@places["max_distance"]/1000.0).round(1) %>公里</span>
-      <% end %>          
+    <h3 style="margin: 0"><%= params[:new_str] %>
+      附近 <%= params[:new_opt] %> 搜尋結果.... ( <%= link_to "隱藏地圖", "#", :id => "click", :onclick => "toggle_visibility('map', 'click');" %> )       
       <% if @places["next_page_token"] %>
-        <%= link_to "下一頁", near_by_path(auto_complete_str: @auto_complete_str, 
-                                          auto_complete_lat: @auto_complete_lat, 
-                                          auto_complete_lng: @auto_complete_lng, 
-                                          pid: @pid, 
-                                          str: @str,
-                                          opt: @opt,
-                                          redirect: @redirect,
-                                          token: @places["next_page_token"]), class: "pull-right", style:"font-size: 20px" %>
+        <%= link_to "下一頁", nearby_path(pid: params[:pid], 
+                                         new_str: params[:new_str],
+                                         new_opt: params[:new_opt],
+                                         str: params[:str],
+                                         opt: params[:opt],
+                                         token: @places["next_page_token"]), class: "pull-right", style:"font-size: 20px" %>
       <% end %>      
     </h3>
   </div> 
@@ -49,25 +43,20 @@
     var locations = <%= raw location_array %>;
 
     var map = new google.maps.Map(document.getElementById('map'), {
-      zoom: 14,
-      center: new google.maps.LatLng(<%= @auto_complete_lat %>, <%= @auto_complete_lng %>),
+      //zoom: 14,
+      //center: new google.maps.LatLng(<%= @auto_complete_lat %>, <%= @auto_complete_lng %>),
       mapTypeId: google.maps.MapTypeId.ROADMAP
     });
-
-    <% if @places["max_distance"] && @places["max_distance"] > 0 %>
-      var bound_0 = new google.maps.LatLng(<%= @places["max_distance_origin_cor"][0] %>, <%= @places["max_distance_origin_cor"][1] %>);
-      var bound_1 = new google.maps.LatLng(<%= @places["max_distance_destination_cor"][0] %>, <%= @places["max_distance_destination_cor"][1] %>);
-      var bounds = new google.maps.LatLngBounds();
-      bounds.extend(bound_0);
-      bounds.extend(bound_1);
-      map.fitBounds(bounds);
-    <% end %>    
 
     var infowindow = new google.maps.InfoWindow();
 
     var marker, i;
+    var bounds = new google.maps.LatLngBounds();
 
     for (i = 0; i < locations.length; i++) {  
+      var bound = new google.maps.LatLng(locations[i][1], locations[i][2]);
+      bounds.extend(bound);
+
       marker = new google.maps.Marker({
         position: new google.maps.LatLng(locations[i][1], locations[i][2]),
         map: map,
@@ -82,8 +71,10 @@
       })(marker, i));
     }
 
+    map.fitBounds(bounds);
+
     marker = new google.maps.Marker({
-      position: new google.maps.LatLng(<%= @auto_complete_lat %>, <%= @auto_complete_lng %>),
+      position: new google.maps.LatLng(<%= @places["auto_complete_lat"] %>, <%= @places["auto_complete_lng"] %>),
       map: map,
       icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
     });

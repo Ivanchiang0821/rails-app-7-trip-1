@@ -21,13 +21,13 @@
     </div>
     <% nearby_margin_top = nearby ? "0px" : "7px" %> 
     <div class="media-body" style="padding-top: 0px;">
-      <h3 class="media-heading" style="font-size: 20px;  margin-top: <%= nearby_margin_top %>;">
-        <% link_path = detail_path(pid: r["pid"], 
-                                   str: params[:str] ? params[:str] : "",
-                                   opt: params[:opt] ? params[:opt] : "",
-                                   redirect: true) %>
+      <h3 class="media-heading" style="font-size: 20px;  margin-bottom: 8px; margin-top: <%= nearby_margin_top %>;">
+        <% link_path = detail_path(str: params[:str],
+                                   opt: params[:opt],
+                                   pid: r["pid"]) %>
 
-        <%= link_to r["name"], link_path %>
+        <%= link_to r["name"], link_path %> 
+        
       </h3>
       <% if r["rating"] %>
         <h4 style="font-size: 14px; margin: 0px;">

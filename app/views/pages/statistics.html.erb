@@ -51,34 +51,103 @@
 				</tbody>
 			</table>		
 			<br><br>
-			<h3>搜尋字串統計</h3>
-			<table class="table table-hover table-borderless" id="stat">
-				<thead>
-					<tr>
-						<th width="45%">關鍵字</th>
-						<th width="10%">類別</th>
-						<th width="10%">次數</th>
-						<th width="10%">自動完成</th>
-						<th width="25%">最後更新</th>
-					</tr>
-				</thead>
-				<tbody>
-					<% @statistics["keyword_count"].each do |k| %>	  
-						<tr>
-							<td>
-								<span class="label label-default" style="font-size: 1.1em">
-									<%= link_to k["keyword"], keyword_path(str: k["keyword"], opt: k["option"]), style: "color: white", :target => "_blank" %>
-								</span>
-							</td>
-							<td><%= k["option"] %></td>
-							<td><%= k["count"] %></td>
-							<td><%= k["autocomplete"] ? "是" : "否" %></td>
-							<td><%= Time.parse(k["updated_at"]).in_time_zone('Taipei').strftime("%F %H:%M") %></td>
-						</tr>
-					<% end %>																																						
-				</tbody>
-			</table>
 
+			<h3>景點統計</h3>
+			<br>
+			<!-- Nav tabs -->
+			<ul class="nav nav-tabs">
+				<li class="active">
+					<a href="#tab1" data-toggle="tab">搜尋字串統計</a>
+				</li>
+				<li >
+					<a href="#tab2" data-toggle="tab">搜尋地點詳情統計</a>
+				</li>				
+				<li >
+					<a href="#tab3" data-toggle="tab">PID搜尋統計</a>
+				</li>
+			</ul>
+			
+			<!-- Tab panes -->
+			<div class="tab-content">
+				<div class="tab-pane active" id="tab1">
+					<table class="table table-hover table-borderless" id="stat">
+						<thead>
+							<tr>
+								<th width="45%">關鍵字</th>
+								<th width="10%">類別</th>
+								<th width="10%">次數</th>
+								<th width="10%">自動完成</th>
+								<th width="25%">最後更新</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% @statistics["keyword_count"].each do |k| %>	  
+								<tr>
+									<td>
+										<span class="label label-default" style="font-size: 1.1em">
+											<%= link_to k["keyword"], keyword_path(str: k["keyword"], opt: k["option"]), style: "color: white", :target => "_blank" %>
+										</span>
+									</td>
+									<td><%= k["option"] %></td>
+									<td><%= k["count"] %></td>
+									<td><%= k["autocomplete"] ? "是" : "否" %></td>
+									<td><%= Time.parse(k["updated_at"]).in_time_zone('Taipei').strftime("%F %H:%M") %></td>
+								</tr>
+							<% end %>																																						
+						</tbody>
+					</table>						
+				</div>
+				<div class="tab-pane" id="tab2">
+					<table class="table table-hover table-borderless" id="stat">
+						<thead>
+							<tr>
+								<th width="65%">名稱</th>
+								<th width="10%">次數</th>
+								<th width="25%">最後更新</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% @statistics["detail_count"].each do |k| %>	  
+								<tr>
+									<td>
+										<span class="label label-default" style="font-size: 1.1em">
+											<%= link_to k["name"], detail_path(pid: k["pid"]), style: "color: white", :target => "_blank" %>
+										</span>
+									</td>
+									<td><%= k["count"] %></td>
+									<td><%= Time.parse(k["updated_at"]).in_time_zone('Taipei').strftime("%F %H:%M") %></td>
+								</tr>
+							<% end %>																																						
+						</tbody>
+					</table>						
+				</div>				
+				<div class="tab-pane" id="tab3">
+					<table class="table table-hover table-borderless" id="stat">
+						<thead>
+							<tr>
+								<th width="55%">PID</th>
+								<th width="10%">類別</th>
+								<th width="10%">次數</th>
+								<th width="25%">最後更新</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% @statistics["pid_count"].each do |k| %>	  
+								<tr>
+									<td>
+										<span class="label label-default" style="font-size: 1.1em">
+											<%= link_to k["pid"], nearby_path(pid: k["pid"], new_opt: k["option"]), style: "color: white", :target => "_blank" %>
+										</span>
+									</td>
+									<td><%= k["option"] %></td>
+									<td><%= k["count"] %></td>
+									<td><%= Time.parse(k["updated_at"]).in_time_zone('Taipei').strftime("%F %H:%M") %></td>
+								</tr>
+							<% end %>																																						
+						</tbody>
+					</table>						
+				</div>
+			</div>
     </div>  
   </div>  
 </div>

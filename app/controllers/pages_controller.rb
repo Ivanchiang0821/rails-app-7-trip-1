@@ -26,7 +26,14 @@ class PagesController < ApplicationController
       uri = URI.parse(encoded_url)
       @places = JSON.parse(Net::HTTP.get(uri)) 
     else
-      wow_search_pid_url = ENV["api_search_by_pid_url"] + "?pid=#{params[:pid]}&opt=#{params[:opt]}"
+      if params[:new_str].nil?
+        wow_detail_url = ENV["api_get_detail_url"] + "?pid=#{params[:pid]}"
+        encoded_url = URI.encode(wow_detail_url)
+        uri = URI.parse(encoded_url)
+        @place = JSON.parse(Net::HTTP.get(uri))   
+        params[:new_str] = @place["name"]
+      end      
+      wow_search_pid_url = ENV["api_search_by_pid_url"] + "?pid=#{params[:pid]}&opt=#{params[:new_opt]}"
       encoded_url = URI.encode(wow_search_pid_url)
       uri = URI.parse(encoded_url)
       @places = JSON.parse(Net::HTTP.get(uri))      
@@ -52,6 +59,8 @@ class PagesController < ApplicationController
     @statistics = JSON.parse(Net::HTTP.get(uri))    
 
     @statistics["keyword_count"].sort_by! { |k| -k["count"] }    
+    @statistics["pid_count"].sort_by! { |k| -k["count"] }    
+    @statistics["detail_count"].sort_by! { |k| -k["count"] }    
   end
 
 end

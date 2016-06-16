@@ -73,7 +73,7 @@
 							<td><%= k["option"] %></td>
 							<td><%= k["count"] %></td>
 							<td><%= k["autocomplete"] ? "是" : "否" %></td>
-							<td><%= Time.parse(k["updated_at"]).in_time_zone('Taipei').strftime("%m-%d %H:%M") %></td>
+							<td><%= Time.parse(k["updated_at"]).in_time_zone('Taipei').strftime("%F %H:%M") %></td>
 						</tr>
 					<% end %>																																						
 				</tbody>

@@ -21,7 +21,7 @@ class PagesController < ApplicationController
 
   def nearby
     if params[:token]
-      wow_get_next_page_url = ENV["api_get_next_page_pid_url"] + "?token=#{params[:token]}"
+      wow_get_next_page_url = ENV["api_get_next_page_pid_url"] + "?pid=#{params[:pid]}&token=#{params[:token]}"
       encoded_url = URI.encode(wow_get_next_page_url)
       uri = URI.parse(encoded_url)
       @places = JSON.parse(Net::HTTP.get(uri)) 

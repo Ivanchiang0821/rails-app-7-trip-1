@@ -11,60 +11,22 @@
 <div class="index-container">
   <div class="row">
     <div class="col-xs-9">
-    	<h3>Web API 執行次數</h3>
-			<table class="table table-hover table-borderless" id="stat">
-				<thead>
-					<tr>
-						<th width="85%">功能</th>
-						<th width="15%">次數</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>JSON關鍵字搜尋地點</td>
-						<td><%= @statistics["cnt_search_by_keyword"] %></td>
-					</tr>
-					<tr>
-						<td>JSON PID搜尋地點</td>
-						<td><%= @statistics["cnt_search_by_pid"] %></td>
-					</tr>
-					<tr>
-						<td>JSON座標搜尋地點</td>
-						<td><%= @statistics["cnt_search_by_coordinate"] %></td>
-					</tr>
-					<tr>
-						<td>JSON關鍵字下一頁</td>
-						<td><%= @statistics["cnt_get_next_page_keyword"] %></td>
-					</tr>
-					<tr>
-						<td>JSON PID下一頁</td>
-						<td><%= @statistics["cnt_get_next_page_pid"] %></td>
-					</tr>
-					<tr>
-						<td>JSON搜尋PID</td>
-						<td><%= @statistics["cnt_get_pid"] %></td>
-					</tr>
-					<tr>
-						<td>JSON地點詳情</td>
-						<td><%= @statistics["cnt_get_detail"] %></td>
-					</tr>																																										
-				</tbody>
-			</table>		
-			<br><br>
-
 			<h3>景點統計</h3>
 			<br>
 			<!-- Nav tabs -->
 			<ul class="nav nav-tabs">
 				<li class="active">
-					<a href="#tab1" data-toggle="tab">搜尋字串統計</a>
+					<a href="#tab1" data-toggle="tab"><h4>搜尋字串統計</h4></a>
 				</li>
 				<li >
-					<a href="#tab2" data-toggle="tab">搜尋地點詳情統計</a>
+					<a href="#tab2" data-toggle="tab"><h4>搜尋地點詳情統計</h4></a>
 				</li>				
 				<li >
-					<a href="#tab3" data-toggle="tab">PID搜尋統計</a>
+					<a href="#tab3" data-toggle="tab"><h4>PID搜尋統計</h4></a>
 				</li>
+				<li >
+					<a href="#tab4" data-toggle="tab"><h4>Web API 執行次數</h4></a>
+				</li>				
 			</ul>
 			
 			<!-- Tab panes -->
@@ -147,6 +109,46 @@
 						</tbody>
 					</table>						
 				</div>
+				<div class="tab-pane" id="tab4">
+					<table class="table table-hover table-borderless" id="stat">
+						<thead>
+							<tr>
+								<th width="85%">功能</th>
+								<th width="15%">次數</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>JSON關鍵字搜尋地點</td>
+								<td><%= @statistics["cnt_search_by_keyword"] %></td>
+							</tr>
+							<tr>
+								<td>JSON PID搜尋地點</td>
+								<td><%= @statistics["cnt_search_by_pid"] %></td>
+							</tr>
+							<tr>
+								<td>JSON座標搜尋地點</td>
+								<td><%= @statistics["cnt_search_by_coordinate"] %></td>
+							</tr>
+							<tr>
+								<td>JSON關鍵字下一頁</td>
+								<td><%= @statistics["cnt_get_next_page_keyword"] %></td>
+							</tr>
+							<tr>
+								<td>JSON PID下一頁</td>
+								<td><%= @statistics["cnt_get_next_page_pid"] %></td>
+							</tr>
+							<tr>
+								<td>JSON搜尋PID</td>
+								<td><%= @statistics["cnt_get_pid"] %></td>
+							</tr>
+							<tr>
+								<td>JSON地點詳情</td>
+								<td><%= @statistics["cnt_get_detail"] %></td>
+							</tr>																																										
+						</tbody>
+					</table>						
+				</div>				
 			</div>
     </div>  
   </div>  

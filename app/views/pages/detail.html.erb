@@ -3,8 +3,27 @@
   <div class="well" id="detail-well">
     <h1>
       <%= @place["name"] %>
+      <span style="color: #e7711b; font-size: 0.6em; margin-left: 15px; position: relative; top:-3px;">
+        <% if @place["rating"] %>
+          <%= @place["rating"] %>&nbsp
+          <% @place["rating"].floor.times do %>
+            <span class="glyphicon glyphicon-star" style="top: 3px"></span>
+          <% end %>
+          <% (5-@place["rating"].floor).times do %>
+            <span class="glyphicon glyphicon-star-empty" style="top: 3px"></span>
+          <% end %>
+          &nbsp&nbsp&nbsp&nbsp
+        <% end %>   
+      </span>       
+      <% if params[:str] && params[:opt] %>   
+        <%= link_to "返回", keyword_path(str: params[:str], opt: params[:opt]), class:"pull-right", style:"font-size: 0.7em" %>
+      <% else %>
+        <%= link_to "返回", root_path, class:"pull-right", style:"font-size: 0.7em" %>
+      <% end %>
+    </h1>
+    <h1 style="margin-top: 0">
       <span id="detail-label">
-        <span class="label label-default">
+        <span class="label label-default" style="margin-left:0">
           <%= link_to "附近景點", nearby_path(pid: @place["pid"], 
                                              str: params[:str], 
                                              opt: params[:opt], 
@@ -28,27 +47,8 @@
                                              new_opt: "購物"), 
                                              style: "color: white;" %>
         </span>    
-      </span>     
-      <% if params[:str] && params[:opt] %>   
-        <%= link_to "返回", keyword_path(str: params[:str], opt: params[:opt]), class:"pull-right", style:"font-size: 0.7em" %>
-      <% else %>
-        <%= link_to "返回", root_path, class:"pull-right", style:"font-size: 0.7em" %>
-      <% end %>
+      </span>       
     </h1>
-    
-    <h4 style="color: #e7711b;">
-      <% if @place["rating"] %>
-        <%= @place["rating"] %>&nbsp
-        <% @place["rating"].floor.times do %>
-          <span class="glyphicon glyphicon-star" style="top: 3px"></span>
-        <% end %>
-        <% (5-@place["rating"].floor).times do %>
-          <span class="glyphicon glyphicon-star-empty" style="top: 3px"></span>
-        <% end %>
-        &nbsp&nbsp&nbsp&nbsp
-      <% end %>  
-    </h4>      
-
     <br>
 
     <% if @place["photos"] %>

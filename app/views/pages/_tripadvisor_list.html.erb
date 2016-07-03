@@ -1,0 +1,16 @@
+<br><br>
+<% @places["tripadvisor"].each_with_index do |t, i| %> 
+  <div class="media">
+    <div class="media-body" style="padding-top: 0px;">
+      <h3 class="media-heading" style="font-size: 20px;  margin-bottom: 8px; margin-top: 7px;">
+        排名第<%= t["order"] %>：<%= link_to t["title"], t["link"] %> 
+        <% if t["rate"] %>
+          ( 評分 <span style="color: #e7711b;"><%= t["rate"] %> </span> )
+        <% end %>
+        <% if t["review"] %>
+          ( <span style="color: #e7711b;"><%= t["review"] %></span> 則評論 )
+        <% end %>   
+      </h3>
+    </div>            
+  </div>       
+<% end %>  

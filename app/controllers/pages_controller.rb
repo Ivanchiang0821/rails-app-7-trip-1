@@ -6,13 +6,15 @@ class PagesController < ApplicationController
   end
 
   def keyword
+    @split_string = params[:str].split(",").map {|s| s.strip}.first(10)
+    @first_string = @split_string.first
     if params[:token]
       wow_get_next_page_url = ENV["api_get_next_page_keyword_url"] + "?token=#{params[:token]}"
       encoded_url = URI.encode(wow_get_next_page_url)
       uri = URI.parse(encoded_url)
       @places = JSON.parse(Net::HTTP.get(uri))            
     else
-      wow_search_keyword_url = ENV["api_search_by_keyword_url"] + "?str=#{params[:str]}&opt=#{params[:opt]}"
+      wow_search_keyword_url = ENV["api_search_by_keyword_url"] + "?str=#{@first_string}&opt=#{params[:opt]}"
       encoded_url = URI.encode(wow_search_keyword_url)
       uri = URI.parse(encoded_url)
       @places = JSON.parse(Net::HTTP.get(uri))      

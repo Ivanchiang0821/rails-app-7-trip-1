@@ -8,13 +8,13 @@
 
 <div class="index-container">
   <div class="well">
-    <h3 style="margin: 0"><%= params[:str] %>
+    <h3 style="margin: 0"><%= @first_string %>
       <% if @places["auto_complete_str"] && @places["auto_complete_str"] != "" %>
         (<%= @places["auto_complete_str"] %>)
       <% end %>
       搜尋 <%= params[:opt] %> 結果.... ( <%= link_to "隱藏地圖", "#", :id => "click", :onclick => "toggle_visibility('map', 'click');" %> )     
       <% if @places["next_page_token"] %>
-        <%= link_to "下一頁", keyword_path(str: params[:str], 
+        <%= link_to "下一頁", keyword_path(str: @first_string, 
                                           opt: params[:opt], 
                                           token: @places["next_page_token"]), class: "pull-right", style:"font-size: 20px" %>
       <% end %>
@@ -34,6 +34,7 @@
   </div>
   <br><br><br><br>
 </div>   
+
 
 <script type="text/javascript">
   <% if @places  %>
@@ -105,4 +106,18 @@
      else
         e2.text = '顯示地圖';      
   }
+</script>
+
+<script >
+  $(document).ready(function() {
+      <% if params[:token].nil? and params[:button] %>
+        <% @split_string.each_with_index do |s, i| %>
+          <% if i != 0 %>
+            <% path = keyword_url + "?str=" + s + "&opt=" + params[:opt]%>
+            window.open("<%= path.html_safe %>", '_blank');
+          <% end %>
+        <% end %>
+      <% end %>
+    });
+
 </script>

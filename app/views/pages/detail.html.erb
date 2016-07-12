@@ -2,7 +2,7 @@
 <div class="container col-xs-8" style="left:16.7%">
   <div class="well" id="detail-well">
     <h1>
-      <%= @place["name"] + " (#{@place["ori_name"]})" %>
+      <%= @place["name"] + " (#{@place["eng_name"]})" + " (#{@place["ori_name"]})" %>
       <% if params[:str] && params[:opt] %>   
         <%= link_to "返回", keyword_path(str: params[:str], opt: params[:opt]), class:"pull-right", style:"font-size: 0.7em" %>
       <% else %>

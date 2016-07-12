@@ -26,7 +26,7 @@
                                    opt: params[:opt],
                                    pid: r["pid"]) %>
 
-        <%= link_to r["name"] + " (#{r["ori_name"]})", link_path %> 
+        <%= link_to r["name"] + " (#{r["eng_name"]})" + " (#{r["ori_name"]})", link_path %> 
         
       </h3>
       <% if r["rating"] %>

@@ -47,7 +47,7 @@
 								<tr>
 									<td>
 										<span class="label label-default" style="font-size: 1.1em">
-											<%= link_to k["keyword"], keyword_path(str: k["keyword"], opt: k["option"]), style: "color: white", :target => "_blank" %>
+											<%= link_to k["keyword"], keyword_path(str: k["keyword"].truncate(20), opt: k["option"]), style: "color: white", :target => "_blank" %>
 										</span>
 									</td>
 									<td><%= k["option"] %></td>
